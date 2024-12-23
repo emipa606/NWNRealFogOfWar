@@ -1,0 +1,8 @@
+is_global = true
+build_property.RootNamespace = rimworld-mod-real-fow
+build_property.ProjectDir = E:\SteamLibrary\steamapps\common\RimWorld\Mods\NWNRealFogOfWar\Source\rimworld-mod-real-fow\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 
+build_property.EnableCodeStyleSeverity = 

@@ -471,20 +471,20 @@ public class MapComponentSeenFog : MapComponent
             }
         }
 
-        sections[(num4 * sectionsSizeX) + num3].dirtyFlags |= SectionLayer_FoVLayer.mapMeshFlag;
+        sections[(num4 * sectionsSizeX) + num3].dirtyFlags |= FoWDef.RealFogOfWar;
         var num9 = num % 17;
         var num10 = num2 % 17;
         if (num9 == 0)
         {
             if (num3 != 0)
             {
-                sections[(num4 * sectionsSizeX) + num3].dirtyFlags |= SectionLayer_FoVLayer.mapMeshFlag;
+                sections[(num4 * sectionsSizeX) + num3].dirtyFlags |= FoWDef.RealFogOfWar;
                 if (num10 == 0)
                 {
                     if (num4 != 0)
                     {
                         sections[((num4 - 1) * sectionsSizeX) + (num3 - 1)].dirtyFlags |=
-                            SectionLayer_FoVLayer.mapMeshFlag;
+                            FoWDef.RealFogOfWar;
                     }
                 }
                 else
@@ -494,7 +494,7 @@ public class MapComponentSeenFog : MapComponent
                         if (num4 < sectionsSizeY)
                         {
                             sections[((num4 + 1) * sectionsSizeX) + (num3 - 1)].dirtyFlags |=
-                                SectionLayer_FoVLayer.mapMeshFlag;
+                                FoWDef.RealFogOfWar;
                         }
                     }
                 }
@@ -506,13 +506,13 @@ public class MapComponentSeenFog : MapComponent
             {
                 if (num3 < sectionsSizeX)
                 {
-                    sections[(num4 * sectionsSizeX) + num3 + 1].dirtyFlags |= SectionLayer_FoVLayer.mapMeshFlag;
+                    sections[(num4 * sectionsSizeX) + num3 + 1].dirtyFlags |= FoWDef.RealFogOfWar;
                     if (num10 == 0)
                     {
                         if (num4 != 0)
                         {
                             sections[((num4 - 1) * sectionsSizeX) + num3 + 1].dirtyFlags |=
-                                SectionLayer_FoVLayer.mapMeshFlag;
+                                FoWDef.RealFogOfWar;
                         }
                     }
                     else
@@ -522,7 +522,7 @@ public class MapComponentSeenFog : MapComponent
                             if (num4 < sectionsSizeY)
                             {
                                 sections[((num4 + 1) * sectionsSizeX) + num3 + 1].dirtyFlags |=
-                                    SectionLayer_FoVLayer.mapMeshFlag;
+                                    FoWDef.RealFogOfWar;
                             }
                         }
                     }
@@ -534,7 +534,7 @@ public class MapComponentSeenFog : MapComponent
         {
             if (num4 != 0)
             {
-                sections[((num4 - 1) * sectionsSizeX) + num3].dirtyFlags |= SectionLayer_FoVLayer.mapMeshFlag;
+                sections[((num4 - 1) * sectionsSizeX) + num3].dirtyFlags |= FoWDef.RealFogOfWar;
             }
         }
         else
@@ -546,7 +546,7 @@ public class MapComponentSeenFog : MapComponent
 
             if (num4 < sectionsSizeY)
             {
-                sections[((num4 + 1) * sectionsSizeX) + num3].dirtyFlags |= SectionLayer_FoVLayer.mapMeshFlag;
+                sections[((num4 + 1) * sectionsSizeX) + num3].dirtyFlags |= FoWDef.RealFogOfWar;
             }
         }
     }

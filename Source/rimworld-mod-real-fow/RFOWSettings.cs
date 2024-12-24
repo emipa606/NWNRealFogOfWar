@@ -27,6 +27,8 @@ public class RFOWSettings : ModSettings
         Disabled = 100
     }
 
+    public static string currentVersion;
+
     public static Vector2 scrollPosition = Vector2.zero;
 
     public static FogFadeSpeedEnum fogFadeSpeed = FogFadeSpeedEnum.Medium;
@@ -71,7 +73,7 @@ public class RFOWSettings : ModSettings
 
 
         var outRect = new Rect(rect.x, rect.y, rect.width, rect.height);
-        var scrollRect = new Rect(0f, 0f, rect.width - 16f, rect.height * 2f);
+        var scrollRect = new Rect(0f, 0f, rect.width - 16f, rect.height * 1.6f);
         Widgets.BeginScrollView(outRect, ref scrollPosition, scrollRect);
 
         row.Begin(scrollRect);
@@ -149,6 +151,40 @@ public class RFOWSettings : ModSettings
         row.CheckboxLabeled("hideSpeakBubble".Translate(), ref hideSpeakBubble, "hideSpeakBubbleDesc".Translate());
         row.CheckboxLabeled("aiSmart".Translate(), ref aiSmart, "aiSmartDesc".Translate());
 
+        if (row.ButtonText("RFWreset".Translate(), widthPct: 0.5f))
+        {
+            // reset all settings
+            fogFadeSpeed = FogFadeSpeedEnum.Medium;
+            fogAlpha = FogAlpha.Medium;
+            baseViewRange = 60;
+            baseHearingRange = 10;
+            buildingVisionModifier = 1;
+            turretVisionModifier = 0.7f;
+            animalVisionModifier = 0.5f;
+            hideSpeakBubble = false;
+            aiSmart = false;
+            censorMode = false;
+            needWatcher = true;
+            hideThreatBig = false;
+            hideThreatSmall = false;
+            hideEventPositive = false;
+            hideEventNegative = false;
+            hideEventNeutral = false;
+            prisonerGiveVision = false;
+            allyGiveVision = false;
+            mapRevealAtStart = false;
+            wildLifeTabVisible = true;
+            needMemoryStorage = true;
+            ApplySettings();
+        }
+
+        if (currentVersion != null)
+        {
+            row.Gap();
+            GUI.contentColor = Color.gray;
+            row.Label("CurrentModVersion".Translate(currentVersion));
+            GUI.contentColor = Color.white;
+        }
 
         row.End();
         Widgets.EndScrollView();

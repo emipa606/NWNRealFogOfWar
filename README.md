@@ -1,0 +1,93 @@
+# [(NWN) Real Fog of War (Continued)]()
+
+![Image](https://i.imgur.com/buuPQel.png)
+
+Update of Luca De Petrillos mod https://steamcommunity.com/sharedfiles/filedetails/?id=2560931731
+
+![Image](https://i.imgur.com/pufA0kM.png)
+	
+![Image](https://i.imgur.com/Z4GOv8H.png)
+
+#  Original feature 
+
+
+
+  - The map is initially unrevealed and must be explored.
+  - Both players and AI's humans, animals, mechanoids, and some objects have and are affected by a Field of View, shared among faction components.
+  - Animals participate in Faction Fog of War only if trained for release and with a master set.
+  - Only things revealed by a Field of View can be attacked by ranged weapons; Mortars and similar weapons can attack unrevealed and unseen places.
+  - Field of View of humans, animals, and mechanoids is adjusted to sight attribute and are affected by darkness (mechanoids are immune) and weather.
+  - Bionic eyes reduce the darkness debuff (one by half, two completely).
+  - Standing and attacking humans, animals and mechanoids have a slightly increased Field of View as they "peek" in nearby spaces.
+  - When attacking and not moving, the sight range is adjusted to weapon range over time (time-based on weapon warm-up time and range).
+  - Sleeping humans and animals have a base Field of View reduced to 20%
+  - At rough and lower difficulties, player's automatic turrets extend the Field of View in their target area.
+  - Added surveillance cameras, to monitor an area (research required), and watchtowers, to increase view range when colonists stand on them.
+  - Works with existing saves, but the map will be unrevealed.
+
+
+
+#  New stuff
+
+![Image](https://i.imgur.com/xsz4cBX.png)
+
+![Image](https://i.imgur.com/DOv7EBE.png)
+
+![Image](https://i.imgur.com/edLM0pX.png)
+
+![Image](https://i.imgur.com/6T54lIo.png)
+
+![Image](https://i.imgur.com/qMcT6Dq.png)
+
+#  New feature 
+
+
+
+- New settings for you to tweak with. Finally, adjustable vision range. (I recommend setting it 55 to vanilla and 65 to CE.
+- Blind people can provide vision by hearing too.
+- Integrated changes from Yayo versions
+- A few bugfix and performance improvements.
+- Night vision integration from other mod-like nocturnal animals sees further at night. Vanilla expanded apparel night vision goggles allow better vision at night.
+- Animal body size matters at providing vision
+- Colonists can hear people moving in FoW.
+- Built-in raid letter suppressor
+- Toggle for prisoner providing vision
+
+
+#  Recommended mods
+
+Mods that add non-view obstructing building:
+[ Vanilla fence ](https://steamcommunity.com/sharedfiles/filedetails/?id=2050680665&amp;searchtext=fence)
+[ Tent ](https://steamcommunity.com/sharedfiles/filedetails/?id=2407128339&amp;searchtext=tent)
+
+For the RTS experience:
+[ Dubs mint minimap (for minimap durr)](https://steamcommunity.com/sharedfiles/filedetails/?id=1662119905&amp;searchtext=dubs+minimap)
+[Guard for me (patrolling colonists have an actual purpose now)](https://steamcommunity.com/sharedfiles/filedetails/?id=1855885448)
+# Know and possible issues
+
+This version might makes the game lag if used with any mod that makes pawn calculate target to shoot constantly.
+Also the hiding Interaction bubble in FoW function cause lot of lag and might even break the UI. It's recommended to disable it.
+# Credit and license 
+
+The original mod belongs to Luca De Petrillo under Apache License 2.0.
+https://github.com/lukakama/rimworld-mod-real-fow/
+
+SaberVS7 for the 1.4 update
+YAYO for the forked version new building.
+inbae for korean translation (though newer update to this mod led to some missing translation) I'll appreciate any updated translation.
+
+![Image](https://i.imgur.com/PwoNOj4.png)
+
+
+
+-  See if the the error persists if you just have this mod and its requirements active.
+-  If not, try adding your other mods until it happens again.
+-  Post your error-log using [HugsLib](https://steamcommunity.com/workshop/filedetails/?id=818773962) or the standalone [Uploader](https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404) and command Ctrl+F12
+-  For best support, please use the Discord-channel for error-reporting.
+-  Do not report errors by making a discussion-thread, I get no notification of that.
+-  If you have the solution for a problem, please post it to the GitHub repository.
+-  Use [RimSort](https://github.com/RimSort/RimSort/releases/latest) to sort your mods
+
+ 
+
+[![Image](https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/) | tags:  tactics,  vision

@@ -16,6 +16,8 @@ public class FoWDef
 
     public static ThingDef Mote_SoundWave;
 
+    public static MapMeshFlagDef RealFogOfWar;
+
     static FoWDef()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(FoWDef));

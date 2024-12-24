@@ -1,5 +1,11 @@
 {
   "Continued": true,
-  "CanAdd": "",
-  "CanRemove": ""
+  "CanAdd": "0",
+  "CanRemove": "2",
+  "SocialImageSet": true,
+  "SearchTags": [
+    " tactics",
+    " vision"
+  ],
+  "PreviewVersion": "1.5"
 }

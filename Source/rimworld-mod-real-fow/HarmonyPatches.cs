@@ -38,13 +38,13 @@ internal class HarmonyPatches
         return thing.fowIsVisible();
     }
 
-    //For no dynamic sections
-    [HarmonyPrefix]
-    public static bool DrawDynamicSectionsPrefix(Section __instance)
-    {
-        __instance.DrawSection();
-        return false;
-    }
+    ////For no dynamic sections
+    //[HarmonyPrefix]
+    //public static bool DrawDynamicSectionsPrefix(Section __instance)
+    //{
+    //    __instance.DrawSection();
+    //    return false;
+    //}
 
 
     //For interaction bubbles

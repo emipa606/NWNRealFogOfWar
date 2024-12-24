@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <RFWreset>Reset</RFWreset>
+  <CurrentModVersion>Installed mod-version: {0}</CurrentModVersion>
   <MustBeUnderRoof>Must be placed under a roof.</MustBeUnderRoof>
   <MustBeNextToWall>Must be placed against a wall.</MustBeNextToWall>
   <NotVisible>Not visible area</NotVisible>

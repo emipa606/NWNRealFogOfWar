@@ -13,8 +13,6 @@ public class SectionLayer_FoVLayer : SectionLayer
 
     public static byte prefFogAlpha = 86;
 
-    public static readonly MapMeshFlagDef mapMeshFlag = LocalMapMeshFlagDefOf.RealFogOfWar;
-
     private readonly bool[] vertsNotShown = new bool[9];
 
     private readonly bool[] vertsSeen = new bool[9];
@@ -30,30 +28,14 @@ public class SectionLayer_FoVLayer : SectionLayer
     private MapComponentSeenFog pawnFog;
 
     private byte[] targetAlphas = [];
-    //static SectionLayer_FoVLayer()
-    //{
-    //	bool flag = SectionLayer_FoVLayer.mapMeshFlag == MapMeshFlagDefOf.None;
-    //	if (flag)
-    //	{
-    //		List<MapMeshFlagDef> allFlags = MapMeshFlagUtility.allFlags;
-    //		var mapMeshFlag = MapMeshFlagDefOf.None;
-    //		foreach (var mapMeshFlag2 in allFlags)
-    //		{
-    //			bool flag2 = mapMeshFlag2 > mapMeshFlag;
-    //			if (flag2)
-    //			{
-    //				mapMeshFlag = mapMeshFlag2;
-    //			}
-    //		}
-    //		SectionLayer_FoVLayer.mapMeshFlag = (MapMeshFlagDef) ((int)(mapMeshFlag) << 1);
-    //		allFlags.Add(SectionLayer_FoVLayer.mapMeshFlag);
-    //		Log.Message("Injected new mapMeshFlag: " + SectionLayer_FoVLayer.mapMeshFlag);
-    //	}
-    //}
+
+    static SectionLayer_FoVLayer()
+    {
+    }
 
     public SectionLayer_FoVLayer(Section section) : base(section)
     {
-        relevantChangeTypes = mapMeshFlag | MapMeshFlagDefOf.FogOfWar;
+        relevantChangeTypes = FoWDef.RealFogOfWar | MapMeshFlagDefOf.FogOfWar;
     }
 
     public override bool Visible => DebugViewSettings.drawFog;

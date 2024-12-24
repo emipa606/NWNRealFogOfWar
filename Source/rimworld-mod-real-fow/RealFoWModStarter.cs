@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
+using Mlie;
 using RimWorld;
 using RimWorldRealFoW.Detours;
 using UnityEngine;
@@ -25,6 +26,7 @@ public class RealFoWModStarter : Mod
 
     public RealFoWModStarter(ModContentPack content) : base(content)
     {
+        RFOWSettings.currentVersion = VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
         LongEventHandler.QueueLongEvent(InjectComponents, "Real Fog of War - Init.", false, null);
         GetSettings<RFOWSettings>();
     }
@@ -182,13 +184,13 @@ public class RealFoWModStarter : Mod
 
         Log.Message("Prefixed method SilhouetteUtility_ShouldDrawSilhouette.");
 
-        harmony.Patch(
-            typeof(Section).GetMethod(nameof(Section.DrawDynamicSections), [
-                typeof(CellRect)
-            ]),
-            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.DrawDynamicSectionsPrefix))));
+        //harmony.Patch(
+        //    typeof(Section).GetMethod(nameof(Section.DrawDynamicSections), [
+        //        typeof(CellRect)
+        //    ]),
+        //    new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.DrawDynamicSectionsPrefix))));
 
-        Log.Message("Prefixed method Section_DrawDynamicSections.");
+        //Log.Message("Prefixed method Section_DrawDynamicSections.");
 
         if (!ModsConfig.IsActive("jaxe.bubbles"))
         {

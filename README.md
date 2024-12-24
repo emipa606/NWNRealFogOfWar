@@ -1,4 +1,4 @@
-# [(NWN) Real Fog of War (Continued)]()
+# [(NWN) Real Fog of War (Continued)](https://steamcommunity.com/sharedfiles/filedetails/?id=3391128917)
 
 ![Image](https://i.imgur.com/buuPQel.png)
 
@@ -90,4 +90,6 @@ inbae for korean translation (though newer update to this mod led to some missin
 
  
 
-[![Image](https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/) | tags:  tactics,  vision
+[![Image](https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/) | tags:  tactics,  vision 
+
+[![Image](https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/3391128917) | tags:  tactics,  vision

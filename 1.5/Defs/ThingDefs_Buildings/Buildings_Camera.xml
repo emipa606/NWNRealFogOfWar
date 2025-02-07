@@ -137,9 +137,10 @@
       <damageData>
         <rect>(0.2,0.2,0.6,0.6)</rect>
       </damageData>
+      <drawOffsetNorth>(0,0,0.4)</drawOffsetNorth>
     </graphicData>
     <placeWorkers>
-      <li>RimWorldRealFoW.PlaceWorker_NextToWall</li>
+      <li>Placeworker_AttachedToWall</li>
     </placeWorkers>
     <costList>
       <Steel>20</Steel>
@@ -159,6 +160,10 @@
       <li>CameraSecurity</li>
     </researchPrerequisites>
     <specialDisplayRadius>23.9</specialDisplayRadius>
+    <building>
+      <isEdifice>false</isEdifice>
+      <isAttachment>true</isAttachment>
+    </building>
   </ThingDef>
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_Bush</defName>
@@ -302,6 +307,10 @@
       <li>CameraSecurityAdvanced</li>
     </researchPrerequisites>
     <specialDisplayRadius>24.9</specialDisplayRadius>
+    <building>
+      <isEdifice>false</isEdifice>
+      <canBuildNonEdificesUnder>true</canBuildNonEdificesUnder>
+    </building>
   </ThingDef>
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_Ground</defName>

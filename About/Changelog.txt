@@ -1,5 +1,8 @@
 # Changelog for NWNRealFogOfWar
 
+1.5.3 - Wall and ceiling cameras can now be placed over other items, using the same mechanic as wall-mounted lights. Thanks to ODevil who made the original patch!
+
+
 1.5.2 - Missed harmony-dependency in the about-file
 
 

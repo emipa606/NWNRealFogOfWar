@@ -4,6 +4,8 @@
 
 Update of Luca De Petrillos mod https://steamcommunity.com/sharedfiles/filedetails/?id=2560931731
 
+- Reported to be compatible with CAI 5000 - Advanced AI + Fog Of War as long as the fog of war in that mod is turned off
+
 ![Image](https://i.imgur.com/pufA0kM.png)
 	
 ![Image](https://i.imgur.com/Z4GOv8H.png)
@@ -89,7 +91,5 @@ inbae for korean translation (though newer update to this mod led to some missin
 -  Use [RimSort](https://github.com/RimSort/RimSort/releases/latest) to sort your mods
 
  
-
-[![Image](https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/) | tags:  tactics,  vision 
 
 [![Image](https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/3391128917) | tags:  tactics,  vision

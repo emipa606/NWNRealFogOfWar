@@ -5,7 +5,7 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <DebugType>None</DebugType>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>latest</LangVersion>
     <FileVersion>1.5.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>

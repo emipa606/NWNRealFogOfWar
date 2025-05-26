@@ -3,6 +3,7 @@ using HarmonyLib;
 using RimWorld;
 using RimWorldRealFoW.Utils;
 using Verse;
+using Verse.Sound;
 
 namespace RimWorldRealFoW;
 
@@ -85,5 +86,24 @@ internal class HarmonyPatches
         }
 
         return let.def != LetterDefOf.ThreatSmall || !RFOWSettings.hideThreatSmall;
+    }
+    // Registers sustainers in a dictionary to be later removed when Thing is hidden
+    [HarmonyPatch(typeof(SustainerManager), nameof(SustainerManager.RegisterSustainer))]
+    public static class Patch_RegisterSustainer
+    {
+        public static void Postfix(Sustainer __result)
+        {
+            if (__result?.info.Maker.Thing is Thing t)
+                FoW_AudioCache.Register(t, __result);
+        }
+    }
+    // Removes sustainers from the dictionary if the sustainer is ended on it's own
+    [HarmonyPatch(typeof(Sustainer), nameof(Sustainer.End))]
+    public static class Patch_Sustainer_End
+    {
+        public static void Postfix(Sustainer __instance)
+        {
+            FoW_AudioCache.Unregister(__instance);
+        }
     }
 }

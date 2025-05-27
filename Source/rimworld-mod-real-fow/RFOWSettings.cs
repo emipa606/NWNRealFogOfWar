@@ -44,6 +44,9 @@ public class RFOWSettings : ModSettings
 
     public static float animalVisionModifier = 0.5f;
 
+    public static int audioSourceRange = 30; // Max tiles you can "hear"
+    public static float volumeMufflingModifier = 0.5f; // 0 = no dropoff, 1 = full dropoff.
+
     public static bool hideSpeakBubble;
 
     public static bool aiSmart;
@@ -59,6 +62,10 @@ public class RFOWSettings : ModSettings
     public static bool mapRevealAtStart;
     public static bool wildLifeTabVisible = true;
     public static bool needMemoryStorage = true;
+    public static bool doAudioCheck = false; // Whether the audio check should be performed for fogged sounds.
+
+    public static bool doFilthReveal = true; // Whether filth should be automatically revealed when its created
+
 
     public static void DoSettingsWindowContents(Rect rect)
     {
@@ -73,11 +80,11 @@ public class RFOWSettings : ModSettings
 
 
         var outRect = new Rect(rect.x, rect.y, rect.width, rect.height);
-        var scrollRect = new Rect(0f, 0f, rect.width - 16f, rect.height * 1.6f);
+        var scrollRect = new Rect(0f, 0f, rect.width - 16f, rect.height * 2f);
         Widgets.BeginScrollView(outRect, ref scrollPosition, scrollRect);
 
         row.Begin(scrollRect);
-
+        row.ColumnWidth = defaultColumnWidth;
         if (row.ButtonTextLabeled("fogAlphaSetting_title".Translate(), ("fogAlphaSetting_" + fogAlpha).Translate()))
         {
             var list = new List<FloatMenuOption>();
@@ -151,6 +158,23 @@ public class RFOWSettings : ModSettings
         row.CheckboxLabeled("hideSpeakBubble".Translate(), ref hideSpeakBubble, "hideSpeakBubbleDesc".Translate());
         row.CheckboxLabeled("aiSmart".Translate(), ref aiSmart, "aiSmartDesc".Translate());
 
+        AddGap(row);
+        row.CheckboxLabeled("doVolumeCheck".Translate(), ref doAudioCheck, "doVolumeCheck".Translate());
+        row.Label("DEBUG: about to draw range slider", -1f);
+        row.Label("audioSourceRange".Translate() + ": " + audioSourceRange.ToString(),-1f, "audioSourceRangeDesc".Translate());
+        audioSourceRange = (int)row.Slider(audioSourceRange, 5f, 100f);
+        row.Label("DEBUG: about to draw muffling slider", -1f);
+        row.Label("volumeMufflingModifier".Translate() + ": " + Math.Round(volumeMufflingModifier).ToString(), -1f, "volumeMufflingModifierDesc".Translate());
+        volumeMufflingModifier = row.Slider(volumeMufflingModifier, 0f, 1f);
+
+        AddGap(row);
+
+        row.CheckboxLabeled(
+    "doFilthReveal".Translate(),
+    ref RFOWSettings.doFilthReveal,
+    "doFilthRevealDesc".Translate()
+);
+
         if (row.ButtonText("RFWreset".Translate(), widthPct: 0.5f))
         {
             // reset all settings
@@ -175,6 +199,9 @@ public class RFOWSettings : ModSettings
             mapRevealAtStart = false;
             wildLifeTabVisible = true;
             needMemoryStorage = true;
+            doAudioCheck = false;
+            audioSourceRange = 30;
+            volumeMufflingModifier = 0.5f;
             ApplySettings();
         }
 
@@ -236,6 +263,10 @@ public class RFOWSettings : ModSettings
         Scribe_Values.Look(ref censorMode, "censorMode");
         Scribe_Values.Look(ref hideSpeakBubble, "hideSpeakBubble");
         Scribe_Values.Look(ref aiSmart, "aiSmart");
+        Scribe_Values.Look(ref doAudioCheck, "doAudioCheck", false);
+        Scribe_Values.Look(ref audioSourceRange, "audioSourceRange", 30);
+        Scribe_Values.Look(ref volumeMufflingModifier, "volumeMufflingModifier", 0.5f);
+        Scribe_Values.Look(ref doFilthReveal, "doFilthReveal", true);
 
         ApplySettings();
     }

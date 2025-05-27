@@ -2,6 +2,8 @@
 using Verse.Sound;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+
 namespace RimWorldRealFoW
 {
     public static class FoW_AudioCache
@@ -45,5 +47,33 @@ namespace RimWorldRealFoW
 
             _map.Remove(thing);
         }
+
+        public static float GetAudibilityFactor(TargetInfo maker, int maxDist)
+        {
+
+            var comp = maker.Map.getMapComponentSeenFog();
+            var origin = maker.Cell;
+            var known = comp.knownCells;
+            var indices = maker.Map.cellIndices;
+
+            for (int d = 0; d <= maxDist; d++)
+            {
+                foreach (var c in GenRadial.RadialCellsAround(origin, d, true))
+                {
+                    if (c.InBounds(maker.Map))
+                    {
+                        int idx = indices.CellToIndex(c);
+                        if (known[idx])
+                        {
+                            float raw = 1f - (d / (float)maxDist);
+                            // at maxDist: raw = 0 → factor = 0
+                            return Mathf.Clamp01(raw * (1f - RFOWSettings.volumeMufflingModifier));
+                        }
+                    }
+                }
+            }
+            return 0f;
+        }
     }
+
 }

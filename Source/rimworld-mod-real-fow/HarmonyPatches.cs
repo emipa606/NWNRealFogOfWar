@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using HarmonyLib;
 using RimWorld;
 using RimWorldRealFoW.Utils;
@@ -88,22 +89,88 @@ internal class HarmonyPatches
         return let.def != LetterDefOf.ThreatSmall || !RFOWSettings.hideThreatSmall;
     }
     // Registers sustainers in a dictionary to be later removed when Thing is hidden
-    [HarmonyPatch(typeof(SustainerManager), nameof(SustainerManager.RegisterSustainer))]
+
     public static class Patch_RegisterSustainer
     {
+        [HarmonyPostfix]
         public static void Postfix(Sustainer __result)
         {
             if (__result?.info.Maker.Thing is Thing t)
                 FoW_AudioCache.Register(t, __result);
         }
     }
-    // Removes sustainers from the dictionary if the sustainer is ended on it's own
-    [HarmonyPatch(typeof(Sustainer), nameof(Sustainer.End))]
-    public static class Patch_Sustainer_End
+    public static class Patch_UnregisterSustainer
     {
-        public static void Postfix(Sustainer __instance)
+        [HarmonyPostfix]
+        public static void UnregisterSustainer(Sustainer __instance)
         {
             FoW_AudioCache.Unregister(__instance);
         }
     }
+
+    
+    public static class Patch_Filth_DrawAt
+    {
+        // prefix runs before the original DrawAt. If it returns false, the filth is never drawn.
+        [HarmonyPrefix]
+        public static bool Prefix(Filth __instance)
+        {
+            if (RFOWSettings.doFilthReveal)
+            {
+                var map = __instance.Map;
+                var comp = map.getMapComponentSeenFog();
+                int idx = map.cellIndices.CellToIndex(__instance.Position);
+                // if we've never seen this cell, skip drawing
+                if (!comp.knownCells[idx])
+                    return false;
+            }
+            return true;  // otherwise, draw as normal
+        }
+    }
+
+    public static class Patch_PlayOneShot
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(SoundDef soundDef, SoundInfo info)
+        {
+            Log.Message("One shot start");
+            if (RFOWSettings.doAudioCheck && info.Maker.Map != null && info.Maker.Cell.InBounds(info.Maker.Map))
+            {
+                float f = FoW_AudioCache.GetAudibilityFactor(info.Maker, RFOWSettings.audioSourceRange);
+                Log.Message($"[FoW] PlayOneShot fired for {soundDef.defName} at {info.Maker.Cell}");
+                Log.Message($"[FoW] doAudioCheck = {RFOWSettings.doAudioCheck}");
+                Log.Message($"[FoW] audibilityFactor = {f:0.00}");
+                if (f <= 0f) return false;          // skip the original call entirely
+                info.volumeFactor *= f;            // otherwise muffle via SoundInfo.volumeFactor
+            }
+            return true; // run the original PlayOneShot
+        }
+    }
+    
+    public static class Patch_TrySpawnSustainer
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(SoundDef soundDef, SoundInfo info)
+        {
+            if (RFOWSettings.doAudioCheck && info.Maker.Thing is Thing t)
+            {
+                float f = FoW_AudioCache.GetAudibilityFactor(t, RFOWSettings.audioSourceRange);
+                Log.Message($"[FoW] TryPlaySustain fired for {info.Maker}");
+                Log.Message($"doAudioCheck = {RFOWSettings.doAudioCheck}");
+                Log.Message($"[FoW] audibilityFactor = {f:0.00}");
+                if (f <= 0f) return false;    // mute entirely
+                info.volumeFactor *= f;       // muffle looping sound
+
+            }
+            return true;
+        }
+        [HarmonyPostfix]
+        public static void Postfix(Sustainer __result)
+        {
+            if (__result != null && __result.info.volumeFactor <= 0f)
+                __result.End();
+        }
+    }
+
+
 }

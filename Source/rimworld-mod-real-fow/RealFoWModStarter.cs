@@ -9,6 +9,8 @@ using RimWorldRealFoW.Detours;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using Verse.Sound;
+using static RimWorldRealFoW.HarmonyPatches;
 
 namespace RimWorldRealFoW;
 
@@ -155,6 +157,12 @@ public class RealFoWModStarter : Mod
         //Designation
         patchMethod(typeof(Designation), typeof(_Designation), nameof(Designation.Notify_Added));
         patchMethod(typeof(Designation), typeof(_Designation), "Notify_Removing");
+
+        // Sustainer cache
+        patchMethod(typeof(SustainerManager), typeof(Patch_RegisterSustainer), nameof(SustainerManager.RegisterSustainer));
+        patchMethod(typeof(Sustainer), typeof(Patch_UnregisterSustainer), nameof(Sustainer.End));
+        patchMethod(typeof(Filth), typeof(Patch_Filth_DrawAt), nameof(Filth.DrawNowAt));
+
         harmony.Patch(
             typeof(AttackTargetFinder).GetMethod(nameof(AttackTargetFinder.CanSee)),
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.CanSeePreFix))));
@@ -183,6 +191,38 @@ public class RealFoWModStarter : Mod
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.ShouldDrawSilhouettePrefix))));
 
         Log.Message("Prefixed method SilhouetteUtility_ShouldDrawSilhouette.");
+
+        harmony.Patch(
+                    typeof(SoundStarter).GetMethod(
+                    nameof(SoundStarter.PlayOneShot),
+                    new[] { typeof(SoundDef), typeof(SoundInfo) }
+            ),
+                    prefix: new HarmonyMethod(
+                    typeof(Patch_PlayOneShot).GetMethod(
+                    nameof(Patch_PlayOneShot.Prefix)))
+                );
+
+        Log.Message("Prefixed method SoundStarter_PlayOneShot.");
+
+        harmony.Patch(
+            typeof(SoundStarter).GetMethod(
+            nameof(SoundStarter.TrySpawnSustainer),
+            new[] { typeof(SoundDef), typeof(SoundInfo) }
+    ),
+            prefix: new HarmonyMethod(
+            typeof(Patch_TrySpawnSustainer).GetMethod(
+            nameof(Patch_TrySpawnSustainer.Prefix))),
+            postfix: new HarmonyMethod(
+            typeof(Patch_TrySpawnSustainer).GetMethod(
+            nameof(Patch_TrySpawnSustainer.Postfix)
+        )
+    )
+);
+        Log.Message("Prefixed method SoundStarter_TrySpawnSustainer.");
+
+
+
+        
 
         //harmony.Patch(
         //    typeof(Section).GetMethod(nameof(Section.DrawDynamicSections), [

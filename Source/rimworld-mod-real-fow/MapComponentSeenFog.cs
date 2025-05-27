@@ -84,6 +84,11 @@ public class MapComponentSeenFog : MapComponent
 
             playerVisibilityChangeTick[i] = 0;
         }
+        foreach (var filth in map.listerThings.ThingsInGroup(ThingRequestGroup.Filth))
+        {
+            int idx = map.cellIndices.CellToIndex(filth.Position);
+            knownCells[idx] = true;
+        }
     }
 
 

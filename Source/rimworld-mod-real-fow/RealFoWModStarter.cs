@@ -161,7 +161,11 @@ public class RealFoWModStarter : Mod
         // Sustainer cache
         patchMethod(typeof(SustainerManager), typeof(Patch_RegisterSustainer), nameof(SustainerManager.RegisterSustainer));
         patchMethod(typeof(Sustainer), typeof(Patch_UnregisterSustainer), nameof(Sustainer.End));
-        patchMethod(typeof(Filth), typeof(Patch_Filth_DrawAt), nameof(Filth.DrawNowAt));
+
+        /* Filth checks
+        patchMethod(typeof(Thing), typeof(Patch_Filth_Draw), nameof(Filth.DrawNowAt));
+        patchMethod(typeof(Filth), typeof(Patch_Filth_Destroy), nameof(Filth.Destroy));
+        */
 
         harmony.Patch(
             typeof(AttackTargetFinder).GetMethod(nameof(AttackTargetFinder.CanSee)),
@@ -181,7 +185,19 @@ public class RealFoWModStarter : Mod
                 typeof(Thing), typeof(OverlayTypes)
             ]),
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.DrawOverlayPrefix))));
+        /*
+        harmony.Patch(
+            typeof(Filth).GetMethod(nameof(Filth.drawn), [
+                typeof(Filth)
+            ]),
+            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.Patch_Filth_DrawAt))));
 
+        harmony.Patch(
+            typeof(Filth).GetMethod(nameof(Filth.Destroy), [
+                typeof(Filth)
+            ]),
+            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.Patch_Filth_Destroy))));
+        */
         Log.Message("Prefixed method OverlayDrawer_DrawOverlay.");
 
         harmony.Patch(

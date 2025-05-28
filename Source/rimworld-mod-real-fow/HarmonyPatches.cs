@@ -108,25 +108,43 @@ internal class HarmonyPatches
         }
     }
 
-    
-    public static class Patch_Filth_DrawAt
+    /*
+    public static class Patch_Filth_Draw
     {
-        // prefix runs before the original DrawAt. If it returns false, the filth is never drawn.
-        [HarmonyPrefix]
-        public static bool Prefix(Filth __instance)
+        public static bool Prefix(Thing __instance)
         {
-            if (RFOWSettings.doFilthReveal)
+            if (__instance is Filth filth && RFOWSettings.doFilthReveal)
             {
-                var map = __instance.Map;
+                var map = filth.Map;
                 var comp = map.getMapComponentSeenFog();
-                int idx = map.cellIndices.CellToIndex(__instance.Position);
-                // if we've never seen this cell, skip drawing
-                if (!comp.knownCells[idx])
-                    return false;
+                int idx = map.cellIndices.CellToIndex(filth.Position);
+                if (!comp.knownFilthCells[idx])
+                    return false;  // skip drawing this filth
             }
-            return true;  // otherwise, draw as normal
+            return true;  // draw everything else, and drawn filth once revealed
         }
     }
+
+    public static class Patch_Filth_Destroy
+    {
+        [HarmonyPostfix]
+        public static void Postfix(Filth __instance)
+        {
+            if (!RFOWSettings.doFilthReveal) return;
+
+            var map = __instance.Map;
+            int idx = map.cellIndices.CellToIndex(__instance.Position);
+            var comp = map.getMapComponentSeenFog();
+
+            // if no other filth remains at that cell, hide future new filth
+            bool anyLeft = map.listerThings
+                              .ThingsInGroup(ThingRequestGroup.Filth)
+                              .Any(t => t.Position == __instance.Position);
+            if (!anyLeft)
+                comp.knownFilthCells[idx] = false;
+        }
+    }
+    */
 
     public static class Patch_PlayOneShot
     {

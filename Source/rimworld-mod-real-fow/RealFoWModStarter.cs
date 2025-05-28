@@ -158,10 +158,6 @@ public class RealFoWModStarter : Mod
         patchMethod(typeof(Designation), typeof(_Designation), nameof(Designation.Notify_Added));
         patchMethod(typeof(Designation), typeof(_Designation), "Notify_Removing");
 
-        // Sustainer cache
-        patchMethod(typeof(SustainerManager), typeof(Patch_RegisterSustainer), nameof(SustainerManager.RegisterSustainer));
-        patchMethod(typeof(Sustainer), typeof(Patch_UnregisterSustainer), nameof(Sustainer.End));
-
         /* Filth checks
         patchMethod(typeof(Thing), typeof(Patch_Filth_Draw), nameof(Filth.DrawNowAt));
         patchMethod(typeof(Filth), typeof(Patch_Filth_Destroy), nameof(Filth.Destroy));
@@ -170,6 +166,7 @@ public class RealFoWModStarter : Mod
         harmony.Patch(
             typeof(AttackTargetFinder).GetMethod(nameof(AttackTargetFinder.CanSee)),
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.CanSeePreFix))));
+
 
         Log.Message("Prefixed method AttackTargetFinder_CanSee.");
         harmony.Patch(
@@ -185,6 +182,25 @@ public class RealFoWModStarter : Mod
                 typeof(Thing), typeof(OverlayTypes)
             ]),
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.DrawOverlayPrefix))));
+
+        
+        harmony.Patch(
+                    typeof(SustainerManager).GetMethod(
+                    nameof(SustainerManager.RegisterSustainer)
+            ),
+                    postfix: new HarmonyMethod(
+                    typeof(Patch_RegisterSustainer).GetMethod(
+                    nameof(Patch_RegisterSustainer.Postfix)))
+                );
+        harmony.Patch(
+                    typeof(Sustainer).GetMethod(
+                    nameof(Sustainer.End)
+            ),
+                    postfix: new HarmonyMethod(
+                    typeof(Patch_UnregisterSustainer).GetMethod(
+                    nameof(Patch_UnregisterSustainer.Postfix)))
+                );
+
         /*
         harmony.Patch(
             typeof(Filth).GetMethod(nameof(Filth.drawn), [
@@ -217,6 +233,8 @@ public class RealFoWModStarter : Mod
                     typeof(Patch_PlayOneShot).GetMethod(
                     nameof(Patch_PlayOneShot.Prefix)))
                 );
+
+        
 
         Log.Message("Prefixed method SoundStarter_PlayOneShot.");
 

@@ -93,16 +93,16 @@ internal class HarmonyPatches
     public static class Patch_RegisterSustainer
     {
         [HarmonyPostfix]
-        public static void Postfix(Sustainer __result)
+        public static void Postfix(Sustainer newSustainer)
         {
-            if (__result?.info.Maker.Thing is Thing t)
-                FoW_AudioCache.Register(t, __result);
+            if (newSustainer?.info.Maker.Thing is Thing t)
+                FoW_AudioCache.Register(t, newSustainer);
         }
     }
     public static class Patch_UnregisterSustainer
     {
         [HarmonyPostfix]
-        public static void UnregisterSustainer(Sustainer __instance)
+        public static void Postfix(Sustainer __instance)
         {
             FoW_AudioCache.Unregister(__instance);
         }
@@ -155,9 +155,6 @@ internal class HarmonyPatches
             if (RFOWSettings.doAudioCheck && info.Maker.Map != null && info.Maker.Cell.InBounds(info.Maker.Map))
             {
                 float f = FoW_AudioCache.GetAudibilityFactor(info.Maker, RFOWSettings.audioSourceRange);
-                Log.Message($"[FoW] PlayOneShot fired for {soundDef.defName} at {info.Maker.Cell}");
-                Log.Message($"[FoW] doAudioCheck = {RFOWSettings.doAudioCheck}");
-                Log.Message($"[FoW] audibilityFactor = {f:0.00}");
                 if (f <= 0f) return false;          // skip the original call entirely
                 info.volumeFactor *= f;            // otherwise muffle via SoundInfo.volumeFactor
             }
@@ -173,9 +170,6 @@ internal class HarmonyPatches
             if (RFOWSettings.doAudioCheck && info.Maker.Thing is Thing t)
             {
                 float f = FoW_AudioCache.GetAudibilityFactor(t, RFOWSettings.audioSourceRange);
-                Log.Message($"[FoW] TryPlaySustain fired for {info.Maker}");
-                Log.Message($"doAudioCheck = {RFOWSettings.doAudioCheck}");
-                Log.Message($"[FoW] audibilityFactor = {f:0.00}");
                 if (f <= 0f) return false;    // mute entirely
                 info.volumeFactor *= f;       // muffle looping sound
 

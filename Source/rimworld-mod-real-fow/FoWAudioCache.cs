@@ -66,8 +66,9 @@ namespace RimWorldRealFoW
                         if (known[idx])
                         {
                             float raw = 1f - (d / (float)maxDist);
-                            // at maxDist: raw = 0 → factor = 0
-                            return Mathf.Clamp01(raw * (1f - RFOWSettings.volumeMufflingModifier));
+                            float m = RFOWSettings.volumeMufflingModifier;
+                            float f = (1f - m) + raw * m;
+                            return Mathf.Clamp01(f);
                         }
                     }
                 }

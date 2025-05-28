@@ -45,7 +45,9 @@ public class RFOWSettings : ModSettings
     public static float animalVisionModifier = 0.5f;
 
     public static int audioSourceRange = 30; // Max tiles you can "hear"
+    private static string audioSourceRangeBuffer;
     public static float volumeMufflingModifier = 0.5f; // 0 = no dropoff, 1 = full dropoff.
+
 
     public static bool hideSpeakBubble;
 
@@ -63,6 +65,7 @@ public class RFOWSettings : ModSettings
     public static bool wildLifeTabVisible = true;
     public static bool needMemoryStorage = true;
     public static bool doAudioCheck = false; // Whether the audio check should be performed for fogged sounds.
+
 
     // public static bool doFilthReveal = true; // Whether filth should be automatically revealed when its created
 
@@ -160,14 +163,16 @@ public class RFOWSettings : ModSettings
 
         AddGap(row);
         row.CheckboxLabeled("doVolumeCheck".Translate(), ref doAudioCheck, "doVolumeCheck".Translate());
-        row.Label("DEBUG: about to draw range slider", -1f);
-        row.Label("audioSourceRange".Translate() + ": " + audioSourceRange.ToString(), -1f, "audioSourceRangeDesc".Translate());
-        audioSourceRange = (int)row.Slider(audioSourceRange, 5f, 100f);
-        row.Label("DEBUG: about to draw muffling slider", -1f);
-        row.Label("volumeMufflingModifier".Translate() + ": " + Math.Round(volumeMufflingModifier).ToString(), -1f, "volumeMufflingModifierDesc".Translate());
-        volumeMufflingModifier = row.Slider(volumeMufflingModifier, 0f, 1f);
-    
 
+        if (doAudioCheck)
+        {
+            row.Label("audioSourceRange".Translate() + ": " + audioSourceRange.ToString(), -1f, "audioSourceRangeDesc".Translate());
+            row.IntEntry(ref audioSourceRange, ref audioSourceRangeBuffer);
+            row.Label("volumeMufflingModifier".Translate() + ": " + Math.Round(volumeMufflingModifier, 1).ToString(), -1f, "volumeMufflingModifierDesc".Translate());
+            volumeMufflingModifier = row.Slider(volumeMufflingModifier, 0f, 1f);
+        }    
+        
+    
         // row.CheckboxLabeled("doFilthReveal".Translate(), ref RFOWSettings.doFilthReveal, doFilthRevealDesc".Translate());
 
         if (row.ButtonText("RFWreset".Translate(), widthPct: 0.5f))

@@ -53,4 +53,11 @@
   <aiSmartDesc>L'IA peu affectée par le brouillard de guerre</aiSmartDesc>
   <mapRevealAtStart>Révéler la carte au début. Cependant, elle ne permet pas d'avoir une vision</mapRevealAtStart>
   <allyGiveVision>L'alliage permet de voir à une distance légèrement réduite</allyGiveVision>
+  <doVolumeCheck>Les sons à l'extérieur du brouillard doivent-ils être étouffés ?</doVolumeCheck>
+  <audioSourceRange>Jusqu'où peut-on entendre les sons dans le brouillard ?</audioSourceRange>
+  <audioSourceRangeDesc>Nombre de tuiles à partir desquelles on peut encore entendre un son dans le brouillard</audioSourceRangeDesc>
+  <volumeMufflingModifier>Dans quelle mesure les sons doivent-ils être étouffés ?</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>A la distance maximale, 0 = pas d'étouffement 1 = complètement silencieux</volumeMufflingModifierDesc>
+  <doFilthReveal>Cacher les nouvelles saletés jusqu'à ce qu'elles soient découvertes</doFilthReveal>
+  <doFilthRevealDesc>Les saletés engendrées par le brouillard resteront invisibles jusqu'à ce que vous révéliez cette tuile.</doFilthRevealDesc>
 </LanguageData>

@@ -82,14 +82,11 @@ public class CompComponentsPositionTracker : ThingSubComp
         if (map != thingParent.Map)
         {
             map = thingParent.Map;
-            mapCompSeenFog = thingParent.Map.getMapComponentSeenFog();
+            mapCompSeenFog = thingParent.Map.GetMapComponentSeenFog();
         }
         else
         {
-            if (mapCompSeenFog == null)
-            {
-                mapCompSeenFog = thingParent.Map.getMapComponentSeenFog();
-            }
+            mapCompSeenFog ??= thingParent.Map.GetMapComponentSeenFog();
         }
 
         if (mapCompSeenFog == null)

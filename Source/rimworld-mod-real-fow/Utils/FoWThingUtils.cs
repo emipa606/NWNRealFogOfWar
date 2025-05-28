@@ -5,9 +5,9 @@ namespace RimWorldRealFoW.Utils;
 
 public static class FoWThingUtils
 {
-    private static readonly Dictionary<IntVec3, IntVec3[]> peekArrayCache = new Dictionary<IntVec3, IntVec3[]>(15);
+    private static readonly Dictionary<IntVec3, IntVec3[]> peekArrayCache = new(15);
 
-    public static IntVec3[] getPeekArray(IntVec3 intVec3)
+    public static IntVec3[] GetPeekArray(IntVec3 intVec3)
     {
         IntVec3[] result;
         if (peekArrayCache.TryGetValue(intVec3, out var value))
@@ -27,7 +27,7 @@ public static class FoWThingUtils
         return result;
     }
 
-    public static bool fowIsVisible(this Thing _this, bool forRender = false)
+    public static bool FowIsVisible(this Thing _this, bool forRender = false)
     {
         bool result;
         if (_this.Spawned)
@@ -53,7 +53,7 @@ public static class FoWThingUtils
 
     private static bool fowInKnownCell(this Thing _this)
     {
-        var mapComponentSeenFog = _this.Map.getMapComponentSeenFog();
+        var mapComponentSeenFog = _this.Map.GetMapComponentSeenFog();
         bool result;
         if (mapComponentSeenFog != null)
         {
@@ -113,7 +113,7 @@ public static class FoWThingUtils
 
     public static CompHiddenable TryGetCompHiddenable(this Thing _this)
     {
-        var compMainComponent = (CompMainComponent)_this.TryGetCompLocal(CompMainComponent.COMP_DEF);
+        var compMainComponent = (CompMainComponent)_this.TryGetCompLocal(CompMainComponent.CompDef);
         var result = compMainComponent?.compHiddenable;
 
         return result;

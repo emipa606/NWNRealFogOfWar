@@ -50,4 +50,11 @@
   <fogFadeSpeedSetting_Medium>中型</fogFadeSpeedSetting_Medium>
   <fogFadeSpeedSetting_Fast>快速</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>残疾</fogFadeSpeedSetting_Disabled>
+  <doVolumeCheck>雾外的声音是否应被消音</doVolumeCheck>
+  <audioSourceRange>在多远的雾中可以听到声音</audioSourceRange>
+  <audioSourceRangeDesc>在雾中仍能听到声音的方砖数</audioSourceRangeDesc>
+  <volumeMufflingModifier>声音消音的程度</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>在最大距离上，0 = 无消音 1 = 完全无声</volumeMufflingModifierDesc>
+  <doFilthReveal>隐藏新的污秽直到被发现</doFilthReveal>
+  <doFilthRevealDesc>在雾中生成的污秽物将保持隐身状态，直到您揭开该瓦片。</doFilthRevealDesc>
 </LanguageData>

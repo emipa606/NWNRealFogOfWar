@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="InternalProfile" />
+    <BuildType Name="Profile" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Project Path="rimworld-mod-real-fow/rimworld-mod-real-fow.csproj" />
+</Solution>

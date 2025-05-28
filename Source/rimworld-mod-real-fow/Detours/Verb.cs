@@ -5,22 +5,22 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-internal static class _Verb
+internal static class Verb
 {
-    internal static void CanHitCellFromCellIgnoringRange_Postfix(this Verb __instance, ref bool __result,
+    internal static void CanHitCellFromCellIgnoringRange_Postfix(this Verse.Verb __instance, ref bool __result,
         IntVec3 sourceSq, IntVec3 targetLoc, bool includeCorners = false)
     {
         if (__result && __instance.verbProps.requireLineOfSight)
         {
-            __result = __instance.caster.Faction != null && SeenByFaction(__instance.caster, targetLoc) ||
+            __result = __instance.caster.Faction != null && seenByFaction(__instance.caster, targetLoc) ||
                        fovLineOfSight(sourceSq, targetLoc, __instance.caster);
         }
     }
 
-    private static bool SeenByFaction(Thing thing, IntVec3 targetLoc)
+    private static bool seenByFaction(Thing thing, IntVec3 targetLoc)
     {
-        var mapComponentSeenFog = thing.Map.getMapComponentSeenFog();
-        return mapComponentSeenFog == null || mapComponentSeenFog.isShown(thing.Faction, targetLoc);
+        var mapComponentSeenFog = thing.Map.GetMapComponentSeenFog();
+        return mapComponentSeenFog == null || mapComponentSeenFog.IsShown(thing.Faction, targetLoc);
     }
 
     private static bool fovLineOfSight(IntVec3 sourceSq, IntVec3 targetLoc, Thing thing)
@@ -33,14 +33,14 @@ internal static class _Verb
         }
 
         bool result;
-        if (thing is not Pawn)
+        if (thing is not Verse.Pawn)
         {
             result = true;
         }
         else
         {
-            var mapComponentSeenFog = thing.Map.getMapComponentSeenFog();
-            var compMainComponent = (CompMainComponent)thing.TryGetCompLocal(CompMainComponent.COMP_DEF);
+            var mapComponentSeenFog = thing.Map.GetMapComponentSeenFog();
+            var compMainComponent = (CompMainComponent)thing.TryGetCompLocal(CompMainComponent.CompDef);
             var compFieldOfViewWatcher = compMainComponent.compFieldOfViewWatcher;
             var num = Mathf.RoundToInt(compFieldOfViewWatcher.CalcPawnSightRange(sourceSq, true,
                 !thing.Position.AdjacentToCardinal(sourceSq)));

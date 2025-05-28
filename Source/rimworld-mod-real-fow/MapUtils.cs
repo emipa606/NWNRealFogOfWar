@@ -6,7 +6,7 @@ namespace RimWorldRealFoW;
 
 public static class MapUtils
 {
-    public static MapComponentSeenFog getMapComponentSeenFog(this Map map)
+    public static MapComponentSeenFog GetMapComponentSeenFog(this Map map)
     {
         var mapComponentSeenFog = map.GetComponent<MapComponentSeenFog>();
         if (mapComponentSeenFog != null)
@@ -21,20 +21,8 @@ public static class MapUtils
     }
 
 
-    public static void RevealMap(Map map)
-    {
-        var mapComponentSeenFog = map.GetComponent<MapComponentSeenFog>();
-        if (mapComponentSeenFog != null)
-        {
-        }
-    }
-
     public static void MakeSoundWave(Vector3 loc, Map map, float size, float velocity)
     {
-        //if (!loc.ShouldSpawnMotesAt(map) || map.moteCounter.SaturatedLowPriority)
-        //{
-        //	return;
-        //}
         var moteSoundWave = (MoteSoundWave)ThingMaker.MakeThing(FoWDef.Mote_SoundWave);
         moteSoundWave.Initialize(loc, size, velocity);
         GenSpawn.Spawn(moteSoundWave, loc.ToIntVec3(), map);
@@ -48,7 +36,7 @@ public static class MapUtils
         for (var i = 1; i < numCells; i++)
         {
             var c = center + GenRadial.RadialPattern[i];
-            if (c.InBounds(map) == false)
+            if (!c.InBounds(map))
             {
                 continue;
             }

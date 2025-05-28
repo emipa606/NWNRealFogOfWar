@@ -4,12 +4,12 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _Designator_Prefix
+public static class DesignatorPrefix
 {
     public static bool CanDesignateCell_Prefix(ref IntVec3 c, ref Designator __instance, ref AcceptanceReport __result)
     {
         var value = Traverse.Create(__instance).Property("Map").GetValue<Map>();
-        var mapComponentSeenFog = value.getMapComponentSeenFog();
+        var mapComponentSeenFog = value.GetMapComponentSeenFog();
         bool result;
         if (mapComponentSeenFog != null && c.InBounds(value) &&
             !mapComponentSeenFog.knownCells[value.cellIndices.CellToIndex(c)])

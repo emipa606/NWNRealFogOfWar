@@ -30,7 +30,7 @@ public class WorkGiver_SurveilCameraConsole : WorkGiver_Scanner
 
     public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
     {
-        if (!((Building_CameraConsole)t).NeedWatcher())
+        if (!Building_CameraConsole.NeedWatcher())
         {
             return false;
         }

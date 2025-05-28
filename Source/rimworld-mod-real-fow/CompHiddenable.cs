@@ -7,13 +7,11 @@ public class CompHiddenable : ThingSubComp
 {
     public bool hidden;
 
-    private IntVec3 lastPosition = IntVec3.Invalid;
-
     private Map map;
 
     private MapComponentSeenFog mapComp;
 
-    public void hide()
+    public void Hide()
     {
         if (hidden)
         {
@@ -37,11 +35,12 @@ public class CompHiddenable : ThingSubComp
         {
             selector.Deselect(parent);
         }
+
         FoW_AudioCache.StopAll(parent); // Find's Thing in dictionary and removes the associated audio sustainer.
         updateMeshes();
     }
 
-    public void show()
+    public void Show()
     {
         if (!hidden)
         {
@@ -68,7 +67,7 @@ public class CompHiddenable : ThingSubComp
         if (map != parent.Map)
         {
             map = parent.Map;
-            mapComp = map.getMapComponentSeenFog();
+            mapComp = map.GetMapComponentSeenFog();
         }
 
         if (mapComp is not { initialized: true })

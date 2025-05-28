@@ -52,7 +52,7 @@ public class CompHideFromPlayer : ThingSubComp
         saveCompressible = parent.def.saveCompressible;
         compHiddenable = mainComponent.compHiddenable;
         lastUpdateTick = Find.TickManager.TicksGame;
-        updateVisibility(false);
+        UpdateVisibility(false);
     }
 
     public override void PostExposeData()
@@ -64,7 +64,7 @@ public class CompHideFromPlayer : ThingSubComp
     public override void ReceiveCompSignal(string signal)
     {
         base.ReceiveCompSignal(signal);
-        updateVisibility(false);
+        UpdateVisibility(false);
     }
 
     public override void CompTick()
@@ -77,16 +77,16 @@ public class CompHideFromPlayer : ThingSubComp
         }
 
         lastUpdateTick = tickGame;
-        updateVisibility(false);
+        UpdateVisibility(false);
     }
 
-    public void forceSeen()
+    public void ForceSeen()
     {
         seenByPlayer = true;
-        updateVisibility(true, true);
+        UpdateVisibility(true, true);
     }
 
-    public void updateVisibility(bool forceCheck, bool forceUpdate = false)
+    public void UpdateVisibility(bool forceCheck, bool forceUpdate = false)
     {
         if (!setupDone || Current.ProgramState == ProgramState.MapInitializing)
         {
@@ -106,14 +106,11 @@ public class CompHideFromPlayer : ThingSubComp
         {
             map = thingParent.Map;
             fogGrid = map.fogGrid;
-            mapCompSeenFog = thingParent.Map.getMapComponentSeenFog();
+            mapCompSeenFog = thingParent.Map.GetMapComponentSeenFog();
         }
         else
         {
-            if (mapCompSeenFog == null)
-            {
-                mapCompSeenFog = thingParent.Map.getMapComponentSeenFog();
-            }
+            mapCompSeenFog ??= thingParent.Map.GetMapComponentSeenFog();
         }
 
         if (mapCompSeenFog == null)
@@ -139,27 +136,20 @@ public class CompHideFromPlayer : ThingSubComp
         {
             if (thingParent.Faction is not { IsPlayer: true })
             {
-                if (isPawn && !hasPartShownToPlayer())
+                if (isPawn && !hasPartShownToPlayer() || !isPawn && !seenByPlayer && !hasPartShownToPlayer())
                 {
-                    compHiddenable.hide();
+                    compHiddenable.Hide();
                 }
                 else
                 {
-                    if (!isPawn && !seenByPlayer && !hasPartShownToPlayer())
-                    {
-                        compHiddenable.hide();
-                    }
-                    else
-                    {
-                        seenByPlayer = true;
-                        compHiddenable.show();
-                    }
+                    seenByPlayer = true;
+                    compHiddenable.Show();
                 }
             }
             else
             {
                 seenByPlayer = true;
-                compHiddenable.show();
+                compHiddenable.Show();
             }
         }
         else
@@ -170,7 +160,7 @@ public class CompHideFromPlayer : ThingSubComp
             }
 
             seenByPlayer = true;
-            compHiddenable.show();
+            compHiddenable.Show();
         }
     }
 
@@ -180,7 +170,7 @@ public class CompHideFromPlayer : ThingSubComp
         bool result;
         if (isOneCell)
         {
-            result = mapCompSeenFog.isShown(ofPlayer, lastPosition.x, lastPosition.z);
+            result = mapCompSeenFog.IsShown(ofPlayer, lastPosition.x, lastPosition.z);
         }
         else
         {
@@ -189,7 +179,7 @@ public class CompHideFromPlayer : ThingSubComp
             {
                 for (var j = cellRect.minZ; j <= cellRect.maxZ; j++)
                 {
-                    if (mapCompSeenFog.isShown(ofPlayer, i, j))
+                    if (mapCompSeenFog.IsShown(ofPlayer, i, j))
                     {
                         return true;
                     }

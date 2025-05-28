@@ -50,4 +50,11 @@
   <fogFadeSpeedSetting_Medium>Mittel</fogFadeSpeedSetting_Medium>
   <fogFadeSpeedSetting_Fast>Schnell</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Behinderte</fogFadeSpeedSetting_Disabled>
+  <doVolumeCheck>Sollen Geräusche außerhalb des Nebels gedämpft werden?</doVolumeCheck>
+  <audioSourceRange>Wie weit im Nebel kann man Geräusche hören</audioSourceRange>
+  <audioSourceRangeDesc>Anzahl der Kacheln, die entfernt sind und in denen man bei Nebel noch ein Geräusch hören kann</audioSourceRangeDesc>
+  <volumeMufflingModifier>Wie stark sollten Geräusche gedämpft werden</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>Bei maximaler Entfernung, 0 = keine Dämpfung 1 = völlig lautlos</volumeMufflingModifierDesc>
+  <doFilthReveal>Neuen Dreck verstecken, bis er entdeckt wird</doFilthReveal>
+  <doFilthRevealDesc>Unter Nebel gespawnter Dreck bleibt unsichtbar, bis du die Kachel aufdeckst.</doFilthRevealDesc>
 </LanguageData>

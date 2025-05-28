@@ -11,7 +11,7 @@ public class Building_SurveillanceCamera : Building
 
     private CompPowerTrader powerComp;
 
-    public bool isPowered()
+    public bool IsPowered()
     {
         return powerComp.PowerOn;
     }
@@ -29,7 +29,7 @@ public class Building_SurveillanceCamera : Building
     {
         base.SpawnSetup(map, respawningAfterLoad);
         powerComp = GetComp<CompPowerTrader>();
-        mapComp = map.getMapComponentSeenFog();
+        mapComp = map.GetMapComponentSeenFog();
         mapComp.RegisterSurveillanceCamera(this);
     }
 

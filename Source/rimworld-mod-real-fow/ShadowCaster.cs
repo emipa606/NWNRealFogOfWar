@@ -5,7 +5,7 @@ namespace RimWorldRealFoW;
 
 public class ShadowCaster
 {
-    private static readonly ColumnPortionQueue queue = new ColumnPortionQueue(64);
+    private static readonly ColumnPortionQueue queue = new(64);
 
     public static void computeFieldOfViewWithShadowCasting(int startX, int startY, int radius, bool[] viewBlockerCells,
         int maxX, int maxY, bool handleSeenAndCache, MapComponentSeenFog mapCompSeenFog, Faction faction,
@@ -13,13 +13,14 @@ public class ShadowCaster
         bool[] oldFovGrid, int oldFovGridMinX, int oldFovGridMaxX, int oldFovGridMinY, int oldFovGridMaxY,
         int oldFovGridWidth, byte specificOctant = 255, int targetX = -1, int targetY = -1)
     {
-        var r_r = radius * radius;
+        var radiusSquared = radius * radius;
         if (specificOctant == byte.MaxValue)
         {
             for (byte b = 0; b < 8; b += 1)
             {
                 computeFieldOfViewInOctantZero(b, fovGrid, fovGridMinX, fovGridMinY, fovGridWidth, oldFovGrid,
-                    oldFovGridMinX, oldFovGridMaxX, oldFovGridMinY, oldFovGridMaxY, oldFovGridWidth, radius, r_r,
+                    oldFovGridMinX, oldFovGridMaxX, oldFovGridMinY, oldFovGridMaxY, oldFovGridWidth, radius,
+                    radiusSquared,
                     startX, startY, maxX, maxY, viewBlockerCells, handleSeenAndCache, mapCompSeenFog, faction,
                     factionShownCells, targetX, targetY, 0, 1, 1, 1, 0);
             }
@@ -27,7 +28,8 @@ public class ShadowCaster
         else
         {
             computeFieldOfViewInOctantZero(specificOctant, fovGrid, fovGridMinX, fovGridMinY, fovGridWidth, oldFovGrid,
-                oldFovGridMinX, oldFovGridMaxX, oldFovGridMinY, oldFovGridMaxY, oldFovGridWidth, radius, r_r, startX,
+                oldFovGridMinX, oldFovGridMaxX, oldFovGridMinY, oldFovGridMaxY, oldFovGridWidth, radius, radiusSquared,
+                startX,
                 startY, maxX, maxY, viewBlockerCells, handleSeenAndCache, mapCompSeenFog, faction, factionShownCells,
                 targetX, targetY, 0, 1, 1, 1, 0);
         }
@@ -103,52 +105,44 @@ public class ShadowCaster
 
                 var firstCheck = false;
                 var secondCheck = false;
-                if (octant == 1 || octant == 2)
+                switch (octant)
                 {
-                    num = startY + x;
-                }
-                else
-                {
-                    if (octant == 3 || octant == 4)
-                    {
+                    case 1:
+                    case 2:
+                        num = startY + x;
+                        break;
+                    case 3:
+                    case 4:
                         num2 = startX - x;
-                    }
-                    else
-                    {
-                        if (octant == 5 || octant == 6)
-                        {
-                            num = startY - x;
-                        }
-                        else
-                        {
-                            num2 = startX + x;
-                        }
-                    }
+                        break;
+                    case 5:
+                    case 6:
+                        num = startY - x;
+                        break;
+                    default:
+                        num2 = startX + x;
+                        break;
                 }
 
                 for (var i = num5; i >= num8; i--)
                 {
-                    if (octant == 1 || octant == 6)
+                    switch (octant)
                     {
-                        num2 = startX + i;
-                    }
-                    else
-                    {
-                        if (octant == 2 || octant == 5)
-                        {
+                        case 1:
+                        case 6:
+                            num2 = startX + i;
+                            break;
+                        case 2:
+                        case 5:
                             num2 = startX - i;
-                        }
-                        else
-                        {
-                            if (octant == 4 || octant == 7)
-                            {
-                                num = startY - i;
-                            }
-                            else
-                            {
-                                num = startY + i;
-                            }
-                        }
+                            break;
+                        case 4:
+                        case 7:
+                            num = startY - i;
+                            break;
+                        default:
+                            num = startY + i;
+                            break;
                     }
 
                     var num9 = (num * maxX) + num2;

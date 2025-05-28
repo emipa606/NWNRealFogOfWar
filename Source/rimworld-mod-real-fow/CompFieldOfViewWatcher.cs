@@ -66,7 +66,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
 
     private int mapSizeZ;
 
-    public List<Pawn> nearByPawn = [];
+    private List<Pawn> nearByPawn = [];
 
     private float nightVisionEffectiveness;
 
@@ -125,34 +125,34 @@ public class CompFieldOfViewWatcher : ThingSubComp
             capacities = pawn.health.capacities;
             pawnPather = pawn.pather;
 
-            thingType = raceProps.Animal ? ThingType.animal : ThingType.pawn;
+            thingType = raceProps.Animal ? ThingType.Animal : ThingType.Pawn;
 
             //this.def = this.parent.def;
 
             dayVisionEffectiveness = pawn.GetStatValue(FoWDef.DayVisionEffectiveness, false);
             nightVisionEffectiveness = pawn.GetStatValue(FoWDef.NightVisionEffectiveness);
-            baseViewRange = RFOWSettings.baseViewRange * dayVisionEffectiveness;
+            baseViewRange = RfowSettings.BaseViewRange * dayVisionEffectiveness;
         }
         else if (turret != null && compMannable == null)
         {
-            thingType = ThingType.turret;
+            thingType = ThingType.Turret;
         }
         else if (compProvideVision != null)
         {
-            thingType = ThingType.visionProvider;
+            thingType = ThingType.VisionProvider;
             if (building != null)
             {
                 building.def.specialDisplayRadius =
-                    (compProvideVision.Props.viewRadius * RFOWSettings.buildingVisionModifier) - 0.1f;
+                    (compProvideVision.Props.viewRadius * RfowSettings.BuildingVisionModifier) - 0.1f;
             }
         }
         else if (building != null)
         {
-            thingType = ThingType.building;
+            thingType = ThingType.Building;
         }
         else
         {
-            Log.Message($"Removing unneeded FoV watcher from {parent.ThingID}");
+            RealFoWModStarter.LogMessage($"Removing unneeded FoV watcher from {parent.ThingID}");
             disabled = true;
             mainComponent.compFieldOfViewWatcher = null;
         }
@@ -164,7 +164,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
         lastStatcheckTick = lastMovementTick;
         lastHearTick = lastMovementTick;
         lastHearUpdateTick = lastMovementTick;
-        updateFoV();
+        UpdateFoV();
     }
 
     public override void PostExposeData()
@@ -174,7 +174,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
 
     public override void ReceiveCompSignal(string signal)
     {
-        updateFoV();
+        UpdateFoV();
     }
 
     public override void CompTick()
@@ -187,35 +187,32 @@ public class CompFieldOfViewWatcher : ThingSubComp
         var ticksGame = Find.TickManager.TicksGame;
         if (pawn != null)
         {
-            if (pawnPather == null)
-            {
-                pawnPather = pawn.pather;
-            }
+            pawnPather ??= pawn.pather;
 
             if (pawnPather is { Moving: true })
             {
                 lastMovementTick = ticksGame;
             }
 
-            if (RFOWSettings.baseHearingRange > 0)
+            if (RfowSettings.BaseHearingRange > 0)
             {
                 var hearing = capacities.GetLevel(PawnCapacityDefOf.Hearing);
                 if (hearing > 0
                     && pawn.Faction == Faction.OfPlayer
-                    && thingType == ThingType.pawn)
+                    && thingType == ThingType.Pawn)
                 {
                     if (ticksGame - lastHearTick == 100)
                     {
                         lastHearTick = ticksGame;
-                        LivePawnHear(pawn.Faction);
+                        livePawnHear(pawn.Faction);
                     }
 
                     if (ticksGame - lastHearUpdateTick == 200)
                     {
                         lastHearUpdateTick = ticksGame;
-                        UpdateNearbyPawn(
+                        updateNearbyPawn(
                             pawn,
-                            RFOWSettings.baseHearingRange,
+                            RfowSettings.BaseHearingRange,
                             capacities.GetLevel(PawnCapacityDefOf.Hearing));
                     }
                 }
@@ -225,13 +222,13 @@ public class CompFieldOfViewWatcher : ThingSubComp
             {
                 lastPositionUpdateTick = ticksGame;
 
-                updateFoV();
+                UpdateFoV();
             }
             else
             {
                 if ((ticksGame - lastPositionUpdateTick) % 30 == 0)
                 {
-                    updateFoV();
+                    UpdateFoV();
                 }
             }
         }
@@ -240,7 +237,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
             if (lastPosition != iv3Invalid
                 && lastPosition != parent.Position || ticksGame % 30 == 0)
             {
-                updateFoV();
+                UpdateFoV();
             }
         }
     }
@@ -259,7 +256,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
 
         if (map != null && lastFaction != null)
         {
-            UnseeSeenCells(lastFaction, lastFactionShownCells);
+            unseeSeenCells(lastFaction, lastFactionShownCells);
         }
 
         if (!disabled && mapCompSeenFog != null)
@@ -268,7 +265,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
         }
 
         map = parent.Map;
-        mapCompSeenFog = map.getMapComponentSeenFog();
+        mapCompSeenFog = map.GetMapComponentSeenFog();
         glowGrid = map.glowGrid;
         roofGrid = map.roofGrid;
         weatherManager = map.weatherManager;
@@ -282,7 +279,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
         mapSizeZ = map.Size.z;
     }
 
-    public void updateFoV(bool forceUpdate = false)
+    public void UpdateFoV(bool forceUpdate = false)
     {
         if (disabled && setupDone && Current.ProgramState != ProgramState.MapInitializing)
         {
@@ -300,171 +297,167 @@ public class CompFieldOfViewWatcher : ThingSubComp
         var faction = thingParent.Faction;
         if (faction != null && pawn is not { Dead: true })
         {
-            if (thingType == ThingType.pawn)
+            switch (thingType)
             {
-                if (RFOWSettings.prisonerGiveVision && pawn.IsPrisonerOfColony)
-                {
-                    LivePawnCalculateFov(position, 0.2f, forceUpdate, Faction.OfPlayer);
-                }
-                else if (RFOWSettings.allyGiveVision && pawn.Faction != Faction.OfPlayer &&
-                         pawn.Faction.AllyOrNeutralTo(Faction.OfPlayer))
-                {
-                    LivePawnCalculateFov(position, 0.5f, forceUpdate, Faction.OfPlayer);
-                }
-                else
-                {
-                    LivePawnCalculateFov(position, 1, forceUpdate, faction);
-                }
-            }
-            else if (thingType == ThingType.animal)
-            {
-                if (pawn.playerSettings == null
-                    || pawn.playerSettings.Master == null
-                    || pawn.training == null
-                    || !pawn.training.HasLearned(TrainableDefOf.Release))
-                {
-                    LivePawnCalculateFov(position,
+                case ThingType.Pawn when RfowSettings.PrisonerGiveVision && pawn.IsPrisonerOfColony:
+                    livePawnCalculateFov(position, 0.2f, forceUpdate, Faction.OfPlayer);
+                    break;
+                case ThingType.Pawn when RfowSettings.AllyGiveVision && pawn.Faction != Faction.OfPlayer &&
+                                         pawn.Faction.AllyOrNeutralTo(Faction.OfPlayer):
+                    livePawnCalculateFov(position, 0.5f, forceUpdate, Faction.OfPlayer);
+                    break;
+                case ThingType.Pawn:
+                    livePawnCalculateFov(position, 1, forceUpdate, faction);
+                    break;
+                case ThingType.Animal when pawn.playerSettings == null
+                                           || pawn.playerSettings.Master == null
+                                           || pawn.training == null
+                                           || !pawn.training.HasLearned(TrainableDefOf.Release):
+                    livePawnCalculateFov(position,
                         0,
                         forceUpdate,
                         faction);
-                }
-                else
-                {
-                    LivePawnCalculateFov(
+                    break;
+                case ThingType.Animal:
+                    livePawnCalculateFov(
                         position,
-                        RFOWSettings.animalVisionModifier * Math.Max(raceProps.baseBodySize * 0.7f, 0.4f),
+                        RfowSettings.AnimalVisionModifier * Math.Max(raceProps.baseBodySize * 0.7f, 0.4f),
                         forceUpdate,
                         faction);
-                }
-            }
-            else if (thingType == ThingType.turret)
-            {
-                //Turret is more sensor based so reduced vision range, still can feed back some info
-
-                var sightRange = Mathf.RoundToInt(turret.GunCompEq.PrimaryVerb.verbProps.range *
-                                                  RFOWSettings.turretVisionModifier);
-
-                if (compPowerTrader is { PowerOn: false }
-                    || compRefuelable is { HasFuel: false }
-                    || compFlickable is { SwitchIsOn: false }
-                    //|| !this.mapCompSeenFog.workingCameraConsole
-                   )
+                    break;
+                case ThingType.Turret:
                 {
-                    sightRange = 0;
-                }
+                    //Turret is more sensor based so reduced vision range, still can feed back some info
 
-                if (calculated
-                    && !forceUpdate
-                    && faction == lastFaction
-                    && position == lastPosition
-                    && sightRange == lastSightRange)
-                {
-                    return;
-                }
+                    var sightRange = Mathf.RoundToInt(turret.GunCompEq.PrimaryVerb.verbProps.range *
+                                                      RfowSettings.TurretVisionModifier);
 
-                calculated = true;
-                lastPosition = position;
-                lastSightRange = sightRange;
-                if (lastFaction != faction)
-                {
-                    if (lastFaction != null)
+                    if (compPowerTrader is { PowerOn: false }
+                        || compRefuelable is { HasFuel: false }
+                        || compFlickable is { SwitchIsOn: false }
+                        //|| !this.mapCompSeenFog.workingCameraConsole
+                       )
                     {
-                        UnseeSeenCells(lastFaction, lastFactionShownCells);
+                        sightRange = 0;
                     }
 
-                    lastFaction = faction;
-                    lastFactionShownCells = mapCompSeenFog.GetFactionShownCells(faction);
-                }
-
-                if (sightRange != 0)
-                {
-                    CalculateFoV(thingParent, sightRange, null);
-                }
-                else
-                {
-                    UnseeSeenCells(lastFaction, lastFactionShownCells);
-                    RevealOccupiedCells();
-                }
-            }
-            else if (thingType == ThingType.visionProvider)
-            {
-                var viewRadius = Mathf.RoundToInt(compProvideVision.Props.viewRadius *
-                                                  RFOWSettings.buildingVisionModifier);
-                if (compPowerTrader is { PowerOn: false }
-                    || compRefuelable is { HasFuel: false }
-                    || compFlickable is { SwitchIsOn: false }
-                    || compProvideVision.Props.needManned && !mapCompSeenFog.workingCameraConsole
-                   )
-                {
-                    viewRadius = 0;
-                }
-
-                if (calculated
-                    && !forceUpdate
-                    && faction == lastFaction
-                    && position == lastPosition
-                    && viewRadius == lastSightRange)
-                {
-                    return;
-                }
-
-                calculated = true;
-                lastPosition = position;
-                lastSightRange = viewRadius;
-                if (lastFaction != faction)
-                {
-                    if (lastFaction != null)
+                    if (calculated
+                        && !forceUpdate
+                        && faction == lastFaction
+                        && position == lastPosition
+                        && sightRange == lastSightRange)
                     {
-                        UnseeSeenCells(lastFaction, lastFactionShownCells);
+                        return;
                     }
 
-                    lastFaction = faction;
-                    lastFactionShownCells = mapCompSeenFog.GetFactionShownCells(faction);
-                }
-
-                if (viewRadius != 0)
-                {
-                    CalculateFoV(thingParent, viewRadius, null);
-                }
-                else
-                {
-                    UnseeSeenCells(lastFaction, lastFactionShownCells);
-                    RevealOccupiedCells();
-                }
-            }
-            else if (thingType == ThingType.building)
-            {
-                var sightRange = 0;
-                if (calculated
-                    && !forceUpdate
-                    && faction == lastFaction
-                    && position == lastPosition
-                    && sightRange == lastSightRange)
-                {
-                    return;
-                }
-
-                calculated = true;
-                lastPosition = position;
-                lastSightRange = sightRange;
-                if (lastFaction != faction)
-                {
-                    if (lastFaction != null)
+                    calculated = true;
+                    lastPosition = position;
+                    lastSightRange = sightRange;
+                    if (lastFaction != faction)
                     {
-                        UnseeSeenCells(lastFaction, lastFactionShownCells);
+                        if (lastFaction != null)
+                        {
+                            unseeSeenCells(lastFaction, lastFactionShownCells);
+                        }
+
+                        lastFaction = faction;
+                        lastFactionShownCells = mapCompSeenFog.GetFactionShownCells(faction);
                     }
 
-                    lastFaction = faction;
-                    lastFactionShownCells = mapCompSeenFog.GetFactionShownCells(faction);
-                }
+                    if (sightRange != 0)
+                    {
+                        CalculateFoV(thingParent, sightRange, null);
+                    }
+                    else
+                    {
+                        unseeSeenCells(lastFaction, lastFactionShownCells);
+                        revealOccupiedCells();
+                    }
 
-                UnseeSeenCells(lastFaction, lastFactionShownCells);
-                RevealOccupiedCells();
-            }
-            else
-            {
-                Log.Warning($"Non disabled thing... {parent.ThingID}");
-                disabled = true;
+                    break;
+                }
+                case ThingType.VisionProvider:
+                {
+                    var viewRadius = Mathf.RoundToInt(compProvideVision.Props.viewRadius *
+                                                      RfowSettings.BuildingVisionModifier);
+                    if (compPowerTrader is { PowerOn: false }
+                        || compRefuelable is { HasFuel: false }
+                        || compFlickable is { SwitchIsOn: false }
+                        || compProvideVision.Props.needManned && !mapCompSeenFog.workingCameraConsole
+                       )
+                    {
+                        viewRadius = 0;
+                    }
+
+                    if (calculated
+                        && !forceUpdate
+                        && faction == lastFaction
+                        && position == lastPosition
+                        && viewRadius == lastSightRange)
+                    {
+                        return;
+                    }
+
+                    calculated = true;
+                    lastPosition = position;
+                    lastSightRange = viewRadius;
+                    if (lastFaction != faction)
+                    {
+                        if (lastFaction != null)
+                        {
+                            unseeSeenCells(lastFaction, lastFactionShownCells);
+                        }
+
+                        lastFaction = faction;
+                        lastFactionShownCells = mapCompSeenFog.GetFactionShownCells(faction);
+                    }
+
+                    if (viewRadius != 0)
+                    {
+                        CalculateFoV(thingParent, viewRadius, null);
+                    }
+                    else
+                    {
+                        unseeSeenCells(lastFaction, lastFactionShownCells);
+                        revealOccupiedCells();
+                    }
+
+                    break;
+                }
+                case ThingType.Building:
+                {
+                    var sightRange = 0;
+                    if (calculated
+                        && !forceUpdate
+                        && faction == lastFaction
+                        && position == lastPosition
+                        && sightRange == lastSightRange)
+                    {
+                        return;
+                    }
+
+                    calculated = true;
+                    lastPosition = position;
+                    lastSightRange = sightRange;
+                    if (lastFaction != faction)
+                    {
+                        if (lastFaction != null)
+                        {
+                            unseeSeenCells(lastFaction, lastFactionShownCells);
+                        }
+
+                        lastFaction = faction;
+                        lastFactionShownCells = mapCompSeenFog.GetFactionShownCells(faction);
+                    }
+
+                    unseeSeenCells(lastFaction, lastFactionShownCells);
+                    revealOccupiedCells();
+                    break;
+                }
+                default:
+                    Log.Warning($"Non disabled thing... {parent.ThingID}");
+                    disabled = true;
+                    break;
             }
         }
         else
@@ -476,7 +469,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
 
             if (lastFaction != null)
             {
-                UnseeSeenCells(lastFaction, lastFactionShownCells);
+                unseeSeenCells(lastFaction, lastFactionShownCells);
             }
 
             lastFaction = faction;
@@ -488,7 +481,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
     {
         if (pawn == null)
         {
-            Log.Message("calcPawnSightRange performed on non pawn thing");
+            RealFoWModStarter.LogMessage("calcPawnSightRange performed on non pawn thing");
             return 0f;
         }
 
@@ -625,11 +618,11 @@ public class CompFieldOfViewWatcher : ThingSubComp
 
         if (lastFaction != null)
         {
-            UnseeSeenCells(lastFaction, lastFactionShownCells);
+            unseeSeenCells(lastFaction, lastFactionShownCells);
         }
     }
 
-    public void CalculateFoV(Thing thing, int intRadius, IntVec3[] peekDirections)
+    private void CalculateFoV(Thing thing, int intRadius, IntVec3[] peekDirections)
     {
         if (!setupDone)
         {
@@ -768,7 +761,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
                 var num15 = oldViewRecMinZ + (m / oldViewWidth);
                 if (num15 >= 0 && num15 <= mapSizeY && num14 >= 0 && num14 <= sizeX)
                 {
-                    mapCompSeenFog.decrementSeen(faction, factionShownCells, (num15 * sizeX) + num14);
+                    mapCompSeenFog.DecrementSeen(faction, factionShownCells, (num15 * sizeX) + num14);
                 }
             }
         }
@@ -794,7 +787,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
         var newViewMap = viewMapSwitch ? viewMap2 : viewMap1;
         if (oldViewMap == null || lastPosition != parent.Position)
         {
-            updateFoV(true);
+            UpdateFoV(true);
         }
         else
         {
@@ -979,7 +972,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
                 {
                     if (num8 >= 0 && num8 <= num2 && num7 >= 0 && num7 <= num)
                     {
-                        mapCompSeenFog.decrementSeen(faction, factionShownCells, (num8 * num) + num7);
+                        mapCompSeenFog.DecrementSeen(faction, factionShownCells, (num8 * num) + num7);
                     }
                 }
             }
@@ -988,7 +981,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
         }
     }
 
-    private void UnseeSeenCells(Faction faction, short[] factionShownCells)
+    private void unseeSeenCells(Faction faction, short[] factionShownCells)
     {
         var array = viewMapSwitch ? viewMap1 : viewMap2;
         if (array == null)
@@ -1014,7 +1007,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
             var num2 = minZ + (i / width);
             if (num2 >= 0 && num2 <= z && num >= 0 && num <= x)
             {
-                mapCompSeenFog.decrementSeen(faction, factionShownCells, (num2 * x) + num);
+                mapCompSeenFog.DecrementSeen(faction, factionShownCells, (num2 * x) + num);
             }
         }
 
@@ -1024,7 +1017,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
         viewRect.minZ = -1;
     }
 
-    private void RevealOccupiedCells()
+    private void revealOccupiedCells()
     {
         if (parent.Faction != Faction.OfPlayer)
         {
@@ -1041,7 +1034,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
         }
     }
 
-    public void UpdateNearbyPawn(Pawn thisPawn, float range, float rangeMod)
+    private void updateNearbyPawn(Pawn thisPawn, float range, float rangeMod)
     {
         if (thisPawn.Map != null)
         {
@@ -1071,9 +1064,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
         }
     }
 
-    private void LivePawnHear(
-        Faction faction
-    )
+    private void livePawnHear(Faction faction)
     {
         foreach (var other in nearByPawn)
         {
@@ -1081,7 +1072,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
             // if (other != null)
             if (other.Faction == faction
                 || other.pather is not { Moving: true }
-                || mapCompSeenFog.isShown(faction, other.Position))
+                || mapCompSeenFog.IsShown(faction, other.Position))
             {
                 continue;
             }
@@ -1097,7 +1088,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
     }
 
 
-    private void LivePawnCalculateFov(
+    private void livePawnCalculateFov(
         IntVec3 position,
         float sightRangeMod,
         bool forceUpdate,
@@ -1131,7 +1122,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
                     && pawn.CurJob.targetA != null
                     && pawn.CurJob.targetA.Cell != IntVec3.Invalid)
                 {
-                    peekDirection = FoWThingUtils.getPeekArray(pawn.CurJob.targetA.Cell - parent.Position);
+                    peekDirection = FoWThingUtils.GetPeekArray(pawn.CurJob.targetA.Cell - parent.Position);
                 }
             }
 
@@ -1153,7 +1144,7 @@ public class CompFieldOfViewWatcher : ThingSubComp
             {
                 if (lastFaction != null)
                 {
-                    UnseeSeenCells(lastFaction, lastFactionShownCells);
+                    unseeSeenCells(lastFaction, lastFactionShownCells);
                 }
 
                 lastFaction = faction;
@@ -1164,16 +1155,16 @@ public class CompFieldOfViewWatcher : ThingSubComp
         }
         else
         {
-            UnseeSeenCells(lastFaction, lastFactionShownCells);
+            unseeSeenCells(lastFaction, lastFactionShownCells);
         }
     }
 
     private enum ThingType
     {
-        turret,
-        building,
-        visionProvider,
-        pawn,
-        animal
+        Turret,
+        Building,
+        VisionProvider,
+        Pawn,
+        Animal
     }
 }

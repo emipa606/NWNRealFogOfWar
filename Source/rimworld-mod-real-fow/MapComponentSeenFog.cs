@@ -14,31 +14,32 @@ public class MapComponentSeenFog : MapComponent
     //Camera console
     //int memoryStorage = 0;
 
-    public readonly List<Building_CameraConsole> cameraConsoles = [];
+    private readonly List<Building_CameraConsole> cameraConsoles = [];
     public readonly List<CompAffectVision>[] compAffectVisionGrid;
     private readonly List<CompHideFromPlayer>[] compHideFromPlayerGrid;
     private readonly byte[] compHideFromPlayerGridCount;
 
-    public readonly short[][] factionsFullShow;
+    private readonly short[][] factionsFullShow;
     public readonly List<CompFieldOfViewWatcher> fowWatchers;
     private readonly IntVec3[] idxToCellCache;
     private readonly int mapCellLength;
     private readonly MapDrawer mapDrawer;
     public readonly int mapSizeX;
-    public readonly int mapSizeZ;
+    private readonly int mapSizeZ;
 
     private readonly Designation[] mineDesignationGrid;
     public readonly int[] playerVisibilityChangeTick;
 
     //Camera building
-    public readonly List<Building_SurveillanceCamera> surveillanceCameras = [];
+    private readonly List<Building_SurveillanceCamera> surveillanceCameras = [];
     public readonly bool[] viewBlockerCells;
     private int currentGameTick;
 
-    public short[][] factionsShownCells;
+    private short[][] factionsShownCells;
     public bool initialized;
 
     public bool[] knownCells;
+
     //public bool[] knownFilthCells; // entry containing only cells with filth.
     private int maxFactionLoadId;
     private Section[] sections;
@@ -85,9 +86,10 @@ public class MapComponentSeenFog : MapComponent
 
             playerVisibilityChangeTick[i] = 0;
         }
+
         foreach (var filth in map.listerThings.ThingsInGroup(ThingRequestGroup.Filth))
         {
-            int idx = map.cellIndices.CellToIndex(filth.Position);
+            _ = map.cellIndices.CellToIndex(filth.Position);
             //knownFilthCells[idx] = true;
         }
     }
@@ -98,7 +100,7 @@ public class MapComponentSeenFog : MapComponent
         get
         {
             return
-                !RFOWSettings.needWatcher ||
+                !RfowSettings.NeedWatcher ||
                 cameraConsoles.Any(c => c.WorkingNow && c.Manned);
         }
     }
@@ -142,7 +144,7 @@ public class MapComponentSeenFog : MapComponent
         var count = 0;
         foreach (var camera in surveillanceCameras)
         {
-            if (camera.isPowered())
+            if (camera.IsPowered())
             {
                 count++;
             }
@@ -151,7 +153,7 @@ public class MapComponentSeenFog : MapComponent
         return count;
     }
 
-    private short[] GetFactionFullShow(Faction faction)
+    private short[] getFactionFullShow(Faction faction)
     {
         if (factionsFullShow[faction.loadID] != null)
         {
@@ -182,25 +184,22 @@ public class MapComponentSeenFog : MapComponent
                 Array.Resize(ref factionsShownCells, maxFactionLoadId + 1);
             }
 
-            if (factionsShownCells[faction.loadID] == null)
-            {
-                factionsShownCells[faction.loadID] = new short[mapCellLength];
-            }
+            factionsShownCells[faction.loadID] ??= new short[mapCellLength];
 
             result = map.Biome.defName == "OuterSpaceBiome"
-                ? GetFactionFullShow(faction)
+                ? getFactionFullShow(faction)
                 : factionsShownCells[faction.loadID];
         }
 
         return result;
     }
 
-    public bool isShown(Faction faction, IntVec3 cell)
+    public bool IsShown(Faction faction, IntVec3 cell)
     {
-        return isShown(faction, cell.x, cell.z);
+        return IsShown(faction, cell.x, cell.z);
     }
 
-    public bool isShown(Faction faction, int x, int z)
+    public bool IsShown(Faction faction, int x, int z)
     {
         return GetFactionShownCells(faction)[(z * mapSizeX) + x] != 0;
     }
@@ -287,7 +286,7 @@ public class MapComponentSeenFog : MapComponent
             var playerStartSpot = MapGenerator.PlayerStartSpot;
 
             //int radius = Mathf.RoundToInt(DefDatabase<RealFoWModDefaultsDef>.GetNamed(RealFoWModDefaultsDef.DEFAULT_DEF_NAME, true).baseViewRange);
-            var radius = RFOWSettings.baseViewRange;
+            var radius = RfowSettings.BaseViewRange;
             ShadowCaster.computeFieldOfViewWithShadowCasting(playerStartSpot.x, playerStartSpot.z, radius,
                 viewBlockerCells, map.Size.x, map.Size.z, false, null, null, null, knownCells, 0, 0, mapSizeX, null, 0,
                 0, 0, 0, 0);
@@ -301,10 +300,10 @@ public class MapComponentSeenFog : MapComponent
                 var c = CellIndicesUtility.IndexToCell(l, mapSizeX);
                 foreach (var this2 in map.thingGrid.ThingsListAtFast(c))
                 {
-                    var compMainComponent = (CompMainComponent)this2.TryGetCompLocal(CompMainComponent.COMP_DEF);
+                    var compMainComponent = (CompMainComponent)this2.TryGetCompLocal(CompMainComponent.CompDef);
                     if (compMainComponent is { compHideFromPlayer: not null })
                     {
-                        compMainComponent.compHideFromPlayer.forceSeen();
+                        compMainComponent.compHideFromPlayer.ForceSeen();
                     }
                 }
             }
@@ -317,7 +316,7 @@ public class MapComponentSeenFog : MapComponent
                 continue;
             }
 
-            var compMainComponent2 = (CompMainComponent)thing.TryGetCompLocal(CompMainComponent.COMP_DEF);
+            var compMainComponent2 = (CompMainComponent)thing.TryGetCompLocal(CompMainComponent.CompDef);
             if (compMainComponent2 == null)
             {
                 continue;
@@ -325,12 +324,12 @@ public class MapComponentSeenFog : MapComponent
 
             compMainComponent2.compComponentsPositionTracker?.updatePosition();
 
-            compMainComponent2.compFieldOfViewWatcher?.updateFoV();
+            compMainComponent2.compFieldOfViewWatcher?.UpdateFoV();
 
-            compMainComponent2.compHideFromPlayer?.updateVisibility(true);
+            compMainComponent2.compHideFromPlayer?.UpdateVisibility(true);
         }
 
-        if (map.Biome.defName == "OuterSpaceBiome" || RFOWSettings.mapRevealAtStart)
+        if (map.Biome.defName == "OuterSpaceBiome" || RfowSettings.MapRevealAtStart)
         {
             for (var l = 0; l < mapCellLength; l++)
             {
@@ -381,7 +380,7 @@ public class MapComponentSeenFog : MapComponent
         var count = list.Count;
         for (var i = 0; i < count; i++)
         {
-            list[i].updateVisibility(true);
+            list[i].UpdateVisibility(true);
         }
     }
 
@@ -430,11 +429,11 @@ public class MapComponentSeenFog : MapComponent
         var count = list.Count;
         for (var i = 0; i < count; i++)
         {
-            list[i].updateVisibility(true);
+            list[i].UpdateVisibility(true);
         }
     }
 
-    public void decrementSeen(Faction faction, short[] factionShownCells, int idx)
+    public void DecrementSeen(Faction faction, short[] factionShownCells, int idx)
     {
         var num = (short)(factionShownCells[idx] - 1);
         factionShownCells[idx] = num;
@@ -458,7 +457,7 @@ public class MapComponentSeenFog : MapComponent
         var count = list.Count;
         for (var i = 0; i < count; i++)
         {
-            list[i].updateVisibility(true);
+            list[i].UpdateVisibility(true);
         }
     }
 
@@ -483,59 +482,71 @@ public class MapComponentSeenFog : MapComponent
         sections[(num4 * sectionsSizeX) + num3].dirtyFlags |= FoWDef.RealFogOfWar;
         var num9 = num % 17;
         var num10 = num2 % 17;
-        if (num9 == 0)
+        switch (num9)
         {
-            if (num3 != 0)
+            case 0:
             {
-                sections[(num4 * sectionsSizeX) + num3].dirtyFlags |= FoWDef.RealFogOfWar;
-                if (num10 == 0)
+                if (num3 != 0)
                 {
-                    if (num4 != 0)
+                    sections[(num4 * sectionsSizeX) + num3].dirtyFlags |= FoWDef.RealFogOfWar;
+                    switch (num10)
                     {
-                        sections[((num4 - 1) * sectionsSizeX) + (num3 - 1)].dirtyFlags |=
-                            FoWDef.RealFogOfWar;
-                    }
-                }
-                else
-                {
-                    if (num10 == 16)
-                    {
-                        if (num4 < sectionsSizeY)
+                        case 0:
                         {
-                            sections[((num4 + 1) * sectionsSizeX) + (num3 - 1)].dirtyFlags |=
-                                FoWDef.RealFogOfWar;
+                            if (num4 != 0)
+                            {
+                                sections[((num4 - 1) * sectionsSizeX) + (num3 - 1)].dirtyFlags |=
+                                    FoWDef.RealFogOfWar;
+                            }
+
+                            break;
+                        }
+                        case 16:
+                        {
+                            if (num4 < sectionsSizeY)
+                            {
+                                sections[((num4 + 1) * sectionsSizeX) + (num3 - 1)].dirtyFlags |=
+                                    FoWDef.RealFogOfWar;
+                            }
+
+                            break;
                         }
                     }
                 }
+
+                break;
             }
-        }
-        else
-        {
-            if (num9 == 16)
+            case 16:
             {
                 if (num3 < sectionsSizeX)
                 {
                     sections[(num4 * sectionsSizeX) + num3 + 1].dirtyFlags |= FoWDef.RealFogOfWar;
-                    if (num10 == 0)
+                    switch (num10)
                     {
-                        if (num4 != 0)
+                        case 0:
                         {
-                            sections[((num4 - 1) * sectionsSizeX) + num3 + 1].dirtyFlags |=
-                                FoWDef.RealFogOfWar;
+                            if (num4 != 0)
+                            {
+                                sections[((num4 - 1) * sectionsSizeX) + num3 + 1].dirtyFlags |=
+                                    FoWDef.RealFogOfWar;
+                            }
+
+                            break;
                         }
-                    }
-                    else
-                    {
-                        if (num10 == 16)
+                        case 16:
                         {
                             if (num4 < sectionsSizeY)
                             {
                                 sections[((num4 + 1) * sectionsSizeX) + num3 + 1].dirtyFlags |=
                                     FoWDef.RealFogOfWar;
                             }
+
+                            break;
                         }
                     }
                 }
+
+                break;
             }
         }
 

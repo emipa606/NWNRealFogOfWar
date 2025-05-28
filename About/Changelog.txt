@@ -1,5 +1,9 @@
 # Changelog for NWNRealFogOfWar
 
+1.5.4 - Sounds can now be muffled if inside the fog, thanks to christheboss894!
+Used DeepL to update translations for ChineseSimplified, French, German
+
+
 1.5.3 - Wall and ceiling cameras can now be placed over other items, using the same mechanic as wall-mounted lights. Thanks to ODevil who made the original patch!
 
 

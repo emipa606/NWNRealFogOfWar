@@ -3,7 +3,7 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _GenView
+public static class GenView
 {
     private static MapComponentSeenFog lastUsedMapComponent;
 
@@ -23,6 +23,6 @@ public static class _GenView
             mapComponentSeenFog = lastUsedMapComponent = map.GetComponent<MapComponentSeenFog>();
         }
 
-        __result = mapComponentSeenFog == null || mapComponentSeenFog.isShown(Faction.OfPlayer, loc.x, loc.z);
+        __result = mapComponentSeenFog == null || mapComponentSeenFog.IsShown(Faction.OfPlayer, loc.x, loc.z);
     }
 }

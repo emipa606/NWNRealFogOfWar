@@ -3,10 +3,10 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _SectionLayer_ThingsPowerGrid
+public static class SectionLayerThingsPowerGrid
 {
     public static bool TakePrintFrom_Prefix(Thing t)
     {
-        return t.fowIsVisible(true);
+        return t.FowIsVisible(true);
     }
 }

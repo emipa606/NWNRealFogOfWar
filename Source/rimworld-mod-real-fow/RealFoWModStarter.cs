@@ -11,6 +11,23 @@ using Verse;
 using Verse.AI;
 using Verse.Sound;
 using static RimWorldRealFoW.HarmonyPatches;
+using BeautyUtility = RimWorldRealFoW.Detours.BeautyUtility;
+using Designation = RimWorldRealFoW.Detours.Designation;
+using EnvironmentStatsDrawer = RimWorldRealFoW.Detours.EnvironmentStatsDrawer;
+using FertilityGrid = RimWorldRealFoW.Detours.FertilityGrid;
+using GenMapUI = RimWorldRealFoW.Detours.GenMapUI;
+using GenView = RimWorldRealFoW.Detours.GenView;
+using HaulAIUtility = RimWorldRealFoW.Detours.HaulAIUtility;
+using LetterStack = RimWorldRealFoW.Detours.LetterStack;
+using Messages = RimWorldRealFoW.Detours.Messages;
+using MoteBubble = RimWorldRealFoW.Detours.MoteBubble;
+using MouseoverReadout = RimWorldRealFoW.Detours.MouseoverReadout;
+using Pawn = RimWorldRealFoW.Detours.Pawn;
+using ReservationUtility = RimWorldRealFoW.Detours.ReservationUtility;
+using RoofGrid = RimWorldRealFoW.Detours.RoofGrid;
+using Selector = RimWorldRealFoW.Detours.Selector;
+using TerrainGrid = RimWorldRealFoW.Detours.TerrainGrid;
+using Verb = RimWorldRealFoW.Detours.Verb;
 
 namespace RimWorldRealFoW;
 
@@ -28,9 +45,19 @@ public class RealFoWModStarter : Mod
 
     public RealFoWModStarter(ModContentPack content) : base(content)
     {
-        RFOWSettings.currentVersion = VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
+        RfowSettings.CurrentVersion = VersionFromManifest.GetVersionFromModMetaData(content.ModMetaData);
         LongEventHandler.QueueLongEvent(InjectComponents, "Real Fog of War - Init.", false, null);
-        GetSettings<RFOWSettings>();
+        GetSettings<RfowSettings>();
+    }
+
+    public static void LogMessage(string message)
+    {
+        if (!Prefs.DevMode)
+        {
+            return;
+        }
+
+        Log.Message($"[Real Fog of War] {message}");
     }
 
     public override string SettingsCategory()
@@ -40,10 +67,10 @@ public class RealFoWModStarter : Mod
 
     public override void DoSettingsWindowContents(Rect rect)
     {
-        RFOWSettings.DoSettingsWindowContents(rect);
+        RfowSettings.DoSettingsWindowContents(rect);
     }
 
-    public static void InjectComponents()
+    private static void InjectComponents()
     {
         foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
         {
@@ -59,12 +86,12 @@ public class RealFoWModStarter : Mod
                     || thingDef.IsBlueprint
                 ))
             {
-                AddComponentAsFirst(thingDef, CompMainComponent.COMP_DEF);
+                AddComponentAsFirst(thingDef, CompMainComponent.CompDef);
             }
         }
     }
 
-    public static void AddComponentAsFirst(ThingDef def, CompProperties compProperties)
+    private static void AddComponentAsFirst(ThingDef def, CompProperties compProperties)
     {
         if (!def.comps.Contains(compProperties))
         {
@@ -72,91 +99,98 @@ public class RealFoWModStarter : Mod
         }
     }
 
-    public static void injectDetours()
+    private static void injectDetours()
     {
-        patchMethod(typeof(Verb), typeof(_Verb), "CanHitCellFromCellIgnoringRange");
-        patchMethod(typeof(Selector), typeof(_Selector), nameof(Selector.Select));
-        patchMethod(typeof(MouseoverReadout), typeof(_MouseoverReadout),
-            nameof(MouseoverReadout.MouseoverReadoutOnGUI));
-        patchMethod(typeof(BeautyUtility), typeof(_BeautyUtility), nameof(BeautyUtility.FillBeautyRelevantCells));
-        patchMethod(typeof(MainTabWindow_Wildlife), typeof(_MainTabWindow_Wildlife), "get_Pawns");
+        patchMethod(typeof(Verse.Verb), typeof(Verb), "CanHitCellFromCellIgnoringRange");
+        patchMethod(typeof(RimWorld.Selector), typeof(Selector), nameof(RimWorld.Selector.Select));
+        patchMethod(typeof(Verse.MouseoverReadout), typeof(MouseoverReadout),
+            nameof(Verse.MouseoverReadout.MouseoverReadoutOnGUI));
+        patchMethod(typeof(RimWorld.BeautyUtility), typeof(BeautyUtility),
+            nameof(RimWorld.BeautyUtility.FillBeautyRelevantCells));
+        patchMethod(typeof(MainTabWindow_Wildlife), typeof(MainTabWindowWildlife), "get_Pawns");
 
-        patchMethod(typeof(Pawn), typeof(_Pawn), nameof(Pawn.DrawGUIOverlay));
-        patchMethod(typeof(GenMapUI), typeof(_GenMapUI), nameof(GenMapUI.DrawThingLabel), typeof(Thing), typeof(string),
+        patchMethod(typeof(Verse.Pawn), typeof(Pawn), nameof(Verse.Pawn.DrawGUIOverlay));
+        patchMethod(typeof(Verse.GenMapUI), typeof(GenMapUI), nameof(Verse.GenMapUI.DrawThingLabel), typeof(Thing),
+            typeof(string),
             typeof(Color));
 
-        patchMethod(typeof(SectionLayer_ThingsGeneral), typeof(_SectionLayer_ThingsGeneral), "TakePrintFrom");
-        patchMethod(typeof(SectionLayer_ThingsPowerGrid), typeof(_SectionLayer_ThingsPowerGrid), "TakePrintFrom");
-        patchMethod(typeof(ReservationUtility), typeof(_ReservationUtility), nameof(ReservationUtility.CanReserve));
-        patchMethod(typeof(ReservationUtility), typeof(_ReservationUtility),
-            nameof(ReservationUtility.CanReserveAndReach));
-        patchMethod(typeof(HaulAIUtility), typeof(_HaulAIUtility), nameof(HaulAIUtility.HaulToStorageJob));
-        patchMethod(typeof(EnvironmentStatsDrawer), typeof(_EnvironmentStatsDrawer), "ShouldShowWindowNow");
+        patchMethod(typeof(SectionLayer_ThingsGeneral), typeof(SectionLayerThingsGeneral), "TakePrintFrom");
+        patchMethod(typeof(SectionLayer_ThingsPowerGrid), typeof(SectionLayerThingsPowerGrid), "TakePrintFrom");
+        patchMethod(typeof(Verse.AI.ReservationUtility), typeof(ReservationUtility),
+            nameof(Verse.AI.ReservationUtility.CanReserve));
+        patchMethod(typeof(Verse.AI.ReservationUtility), typeof(ReservationUtility),
+            nameof(Verse.AI.ReservationUtility.CanReserveAndReach));
+        patchMethod(typeof(Verse.AI.HaulAIUtility), typeof(HaulAIUtility),
+            nameof(Verse.AI.HaulAIUtility.HaulToStorageJob));
+        patchMethod(typeof(Verse.EnvironmentStatsDrawer), typeof(EnvironmentStatsDrawer), "ShouldShowWindowNow");
 
-        patchMethod(typeof(Messages), typeof(_Messages), nameof(Messages.Message), typeof(string), typeof(LookTargets),
+        patchMethod(typeof(Verse.Messages), typeof(Messages), nameof(Verse.Messages.Message), typeof(string),
+            typeof(LookTargets),
             typeof(MessageTypeDef), typeof(bool));
-        patchMethod(typeof(LetterStack), typeof(_LetterStack), nameof(LetterStack.ReceiveLetter), typeof(TaggedString),
+        patchMethod(typeof(Verse.LetterStack), typeof(LetterStack), nameof(Verse.LetterStack.ReceiveLetter),
+            typeof(TaggedString),
             typeof(TaggedString), typeof(LetterDef), typeof(LookTargets), typeof(Faction), typeof(Quest),
             typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool));
 
-        patchMethod(typeof(MoteBubble), typeof(_MoteBubble), "DrawAt");
-        patchMethod(typeof(GenView), typeof(_GenView), nameof(GenView.ShouldSpawnMotesAt), typeof(IntVec3), typeof(Map),
+        patchMethod(typeof(RimWorld.MoteBubble), typeof(MoteBubble), "DrawAt");
+        patchMethod(typeof(Verse.GenView), typeof(GenView), nameof(Verse.GenView.ShouldSpawnMotesAt), typeof(IntVec3),
+            typeof(Map),
             typeof(bool));
 
-        patchMethod(typeof(FertilityGrid), typeof(_FertilityGrid), "CellBoolDrawerGetBoolInt");
-        patchMethod(typeof(TerrainGrid), typeof(_TerrainGrid), "CellBoolDrawerGetBoolInt");
-        patchMethod(typeof(RoofGrid), typeof(_RoofGrid), nameof(RoofGrid.GetCellBool));
+        patchMethod(typeof(RimWorld.FertilityGrid), typeof(FertilityGrid), "CellBoolDrawerGetBoolInt");
+        patchMethod(typeof(Verse.TerrainGrid), typeof(TerrainGrid), "CellBoolDrawerGetBoolInt");
+        patchMethod(typeof(Verse.RoofGrid), typeof(RoofGrid), nameof(Verse.RoofGrid.GetCellBool));
 
         //Area only designator
-        patchMethod(typeof(Designator_AreaBuildRoof), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_AreaBuildRoof), typeof(DesignatorPrefix),
             nameof(Designator_AreaBuildRoof.CanDesignateCell));
-        patchMethod(typeof(Designator_AreaNoRoof), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_AreaNoRoof), typeof(DesignatorPrefix),
             nameof(Designator_AreaNoRoof.CanDesignateCell));
-        patchMethod(typeof(Designator_ZoneAdd_Growing), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_ZoneAdd_Growing), typeof(DesignatorPrefix),
             nameof(Designator_ZoneAdd_Growing.CanDesignateCell));
-        patchMethod(typeof(Designator_ZoneAddStockpile), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_ZoneAddStockpile), typeof(DesignatorPrefix),
             nameof(Designator_ZoneAddStockpile.CanDesignateCell));
 
         //Area+Designator
-        patchMethod(typeof(Designator_Claim), typeof(_Designator_Prefix), nameof(Designator_Claim.CanDesignateCell));
-        patchMethod(typeof(Designator_Claim), typeof(_Designator_Prefix), nameof(Designator_Claim.CanDesignateThing));
-        patchMethod(typeof(Designator_Deconstruct), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_Claim), typeof(DesignatorPrefix), nameof(Designator_Claim.CanDesignateCell));
+        patchMethod(typeof(Designator_Claim), typeof(DesignatorPrefix), nameof(Designator_Claim.CanDesignateThing));
+        patchMethod(typeof(Designator_Deconstruct), typeof(DesignatorPrefix),
             nameof(Designator_Deconstruct.CanDesignateCell));
-        patchMethod(typeof(Designator_Deconstruct), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_Deconstruct), typeof(DesignatorPrefix),
             nameof(Designator_Deconstruct.CanDesignateThing));
-        patchMethod(typeof(Designator_Haul), typeof(_Designator_Prefix), nameof(Designator_Haul.CanDesignateCell));
-        patchMethod(typeof(Designator_Haul), typeof(_Designator_Prefix), nameof(Designator_Haul.CanDesignateThing));
-        patchMethod(typeof(Designator_Hunt), typeof(_Designator_Prefix), nameof(Designator_Hunt.CanDesignateCell));
-        patchMethod(typeof(Designator_Hunt), typeof(_Designator_Prefix), nameof(Designator_Hunt.CanDesignateThing));
-        patchMethod(typeof(Designator_Plants), typeof(_Designator_Prefix), nameof(Designator_Plants.CanDesignateCell));
-        patchMethod(typeof(Designator_Plants), typeof(_Designator_Prefix), nameof(Designator_Plants.CanDesignateThing));
-        patchMethod(typeof(Designator_PlantsHarvest), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_Haul), typeof(DesignatorPrefix), nameof(Designator_Haul.CanDesignateCell));
+        patchMethod(typeof(Designator_Haul), typeof(DesignatorPrefix), nameof(Designator_Haul.CanDesignateThing));
+        patchMethod(typeof(Designator_Hunt), typeof(DesignatorPrefix), nameof(Designator_Hunt.CanDesignateCell));
+        patchMethod(typeof(Designator_Hunt), typeof(DesignatorPrefix), nameof(Designator_Hunt.CanDesignateThing));
+        patchMethod(typeof(Designator_Plants), typeof(DesignatorPrefix), nameof(Designator_Plants.CanDesignateCell));
+        patchMethod(typeof(Designator_Plants), typeof(DesignatorPrefix), nameof(Designator_Plants.CanDesignateThing));
+        patchMethod(typeof(Designator_PlantsHarvest), typeof(DesignatorPrefix),
             nameof(Designator_PlantsHarvest.CanDesignateThing));
-        patchMethod(typeof(Designator_PlantsHarvestWood), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_PlantsHarvestWood), typeof(DesignatorPrefix),
             nameof(Designator_PlantsHarvestWood.CanDesignateThing));
-        patchMethod(typeof(Designator_RemoveFloor), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_RemoveFloor), typeof(DesignatorPrefix),
             nameof(Designator_RemoveFloor.CanDesignateCell));
-        patchMethod(typeof(Designator_SmoothSurface), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_SmoothSurface), typeof(DesignatorPrefix),
             nameof(Designator_SmoothSurface.CanDesignateCell));
-        patchMethod(typeof(Designator_Tame), typeof(_Designator_Prefix), nameof(Designator_Tame.CanDesignateCell));
-        patchMethod(typeof(Designator_Tame), typeof(_Designator_Prefix), nameof(Designator_Tame.CanDesignateThing));
-        patchMethod(typeof(Designator_Uninstall), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_Tame), typeof(DesignatorPrefix), nameof(Designator_Tame.CanDesignateCell));
+        patchMethod(typeof(Designator_Tame), typeof(DesignatorPrefix), nameof(Designator_Tame.CanDesignateThing));
+        patchMethod(typeof(Designator_Uninstall), typeof(DesignatorPrefix),
             nameof(Designator_Uninstall.CanDesignateCell));
 
         //PLacing designator
-        patchMethod(typeof(Designator_Uninstall), typeof(_Designator_Prefix),
+        patchMethod(typeof(Designator_Uninstall), typeof(DesignatorPrefix),
             nameof(Designator_Uninstall.CanDesignateThing));
-        patchMethod(typeof(Designator_Build), typeof(_Designator_Place_Postfix),
+        patchMethod(typeof(Designator_Build), typeof(DesignatorPlace),
             nameof(Designator_Build.CanDesignateCell));
-        patchMethod(typeof(Designator_Install), typeof(_Designator_Place_Postfix),
+        patchMethod(typeof(Designator_Install), typeof(DesignatorPlace),
             nameof(Designator_Install.CanDesignateCell));
 
         //Specific designation
-        patchMethod(typeof(Designator_Mine), typeof(_Designator_Mine), nameof(Designator_Mine.CanDesignateCell));
+        patchMethod(typeof(Designator_Mine), typeof(DesignatorMine), nameof(Designator_Mine.CanDesignateCell));
 
         //Designation
-        patchMethod(typeof(Designation), typeof(_Designation), nameof(Designation.Notify_Added));
-        patchMethod(typeof(Designation), typeof(_Designation), "Notify_Removing");
+        patchMethod(typeof(Verse.Designation), typeof(Designation), nameof(Verse.Designation.Notify_Added));
+        patchMethod(typeof(Verse.Designation), typeof(Designation), "Notify_Removing");
 
         /* Filth checks
         patchMethod(typeof(Thing), typeof(Patch_Filth_Draw), nameof(Filth.DrawNowAt));
@@ -165,106 +199,80 @@ public class RealFoWModStarter : Mod
 
         harmony.Patch(
             typeof(AttackTargetFinder).GetMethod(nameof(AttackTargetFinder.CanSee)),
-            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.CanSeePreFix))));
+            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(CanSeePreFix))));
 
 
-        Log.Message("Prefixed method AttackTargetFinder_CanSee.");
+        LogMessage("Prefixed method AttackTargetFinder_CanSee.");
         harmony.Patch(
-            typeof(LetterStack).GetMethod(nameof(LetterStack.ReceiveLetter), [
+            typeof(Verse.LetterStack).GetMethod(nameof(Verse.LetterStack.ReceiveLetter), [
                 typeof(Letter), typeof(string), typeof(int), typeof(bool)
             ]),
-            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.ReceiveLetterPrefix))));
+            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(ReceiveLetterPrefix))));
 
-        Log.Message("Prefixed method LetterStack_ReceiveLetter.");
+        LogMessage("Prefixed method LetterStack_ReceiveLetter.");
 
         harmony.Patch(
             typeof(OverlayDrawer).GetMethod(nameof(OverlayDrawer.DrawOverlay), [
                 typeof(Thing), typeof(OverlayTypes)
             ]),
-            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.DrawOverlayPrefix))));
+            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(DrawOverlayPrefix))));
 
-        
+
         harmony.Patch(
-                    typeof(SustainerManager).GetMethod(
-                    nameof(SustainerManager.RegisterSustainer)
+            typeof(SustainerManager).GetMethod(
+                nameof(SustainerManager.RegisterSustainer)
             ),
-                    postfix: new HarmonyMethod(
-                    typeof(Patch_RegisterSustainer).GetMethod(
+            postfix: new HarmonyMethod(
+                typeof(Patch_RegisterSustainer).GetMethod(
                     nameof(Patch_RegisterSustainer.Postfix)))
-                );
+        );
         harmony.Patch(
-                    typeof(Sustainer).GetMethod(
-                    nameof(Sustainer.End)
+            typeof(Sustainer).GetMethod(
+                nameof(Sustainer.End)
             ),
-                    postfix: new HarmonyMethod(
-                    typeof(Patch_UnregisterSustainer).GetMethod(
+            postfix: new HarmonyMethod(
+                typeof(Patch_UnregisterSustainer).GetMethod(
                     nameof(Patch_UnregisterSustainer.Postfix)))
-                );
+        );
 
-        /*
-        harmony.Patch(
-            typeof(Filth).GetMethod(nameof(Filth.drawn), [
-                typeof(Filth)
-            ]),
-            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.Patch_Filth_DrawAt))));
-
-        harmony.Patch(
-            typeof(Filth).GetMethod(nameof(Filth.Destroy), [
-                typeof(Filth)
-            ]),
-            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.Patch_Filth_Destroy))));
-        */
-        Log.Message("Prefixed method OverlayDrawer_DrawOverlay.");
+        LogMessage("Prefixed method OverlayDrawer_DrawOverlay.");
 
         harmony.Patch(
             typeof(SilhouetteUtility).GetMethod(nameof(SilhouetteUtility.ShouldDrawSilhouette), [
                 typeof(Thing)
             ]),
-            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.ShouldDrawSilhouettePrefix))));
+            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(ShouldDrawSilhouettePrefix))));
 
-        Log.Message("Prefixed method SilhouetteUtility_ShouldDrawSilhouette.");
-
-        harmony.Patch(
-                    typeof(SoundStarter).GetMethod(
-                    nameof(SoundStarter.PlayOneShot),
-                    new[] { typeof(SoundDef), typeof(SoundInfo) }
-            ),
-                    prefix: new HarmonyMethod(
-                    typeof(Patch_PlayOneShot).GetMethod(
-                    nameof(Patch_PlayOneShot.Prefix)))
-                );
-
-        
-
-        Log.Message("Prefixed method SoundStarter_PlayOneShot.");
+        LogMessage("Prefixed method SilhouetteUtility_ShouldDrawSilhouette.");
 
         harmony.Patch(
             typeof(SoundStarter).GetMethod(
-            nameof(SoundStarter.TrySpawnSustainer),
-            new[] { typeof(SoundDef), typeof(SoundInfo) }
-    ),
-            prefix: new HarmonyMethod(
-            typeof(Patch_TrySpawnSustainer).GetMethod(
-            nameof(Patch_TrySpawnSustainer.Prefix))),
-            postfix: new HarmonyMethod(
-            typeof(Patch_TrySpawnSustainer).GetMethod(
-            nameof(Patch_TrySpawnSustainer.Postfix)
-        )
-    )
-);
-        Log.Message("Prefixed method SoundStarter_TrySpawnSustainer.");
+                nameof(SoundStarter.PlayOneShot),
+                [typeof(SoundDef), typeof(SoundInfo)]
+            ),
+            new HarmonyMethod(
+                typeof(Patch_PlayOneShot).GetMethod(
+                    nameof(Patch_PlayOneShot.Prefix)))
+        );
 
 
+        LogMessage("Prefixed method SoundStarter_PlayOneShot.");
 
-        
-
-        //harmony.Patch(
-        //    typeof(Section).GetMethod(nameof(Section.DrawDynamicSections), [
-        //        typeof(CellRect)
-        //    ]),
-        //    new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.DrawDynamicSectionsPrefix))));
-
-        //Log.Message("Prefixed method Section_DrawDynamicSections.");
+        harmony.Patch(
+            typeof(SoundStarter).GetMethod(
+                nameof(SoundStarter.TrySpawnSustainer),
+                [typeof(SoundDef), typeof(SoundInfo)]
+            ),
+            new HarmonyMethod(
+                typeof(Patch_TrySpawnSustainer).GetMethod(
+                    nameof(Patch_TrySpawnSustainer.Prefix))),
+            new HarmonyMethod(
+                typeof(Patch_TrySpawnSustainer).GetMethod(
+                    nameof(Patch_TrySpawnSustainer.Postfix)
+                )
+            )
+        );
+        LogMessage("Prefixed method SoundStarter_TrySpawnSustainer.");
 
         if (!ModsConfig.IsActive("jaxe.bubbles"))
         {
@@ -273,15 +281,14 @@ public class RealFoWModStarter : Mod
 
         var drawBubble = AccessTools.Method(
             "Bubbles.Interface.Bubbler:DrawBubble"
-            //,new Type[] {typeof(Pawn), typeof(bool), typeof(float)}
         );
         if (drawBubble != null)
         {
             harmony.Patch(
                 drawBubble,
-                new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.DrawBubblePrefix)))
+                new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(DrawBubblePrefix)))
             );
-            Log.Message("Interaction bubble is active. Patched");
+            LogMessage("Interaction bubble is active. Patched");
         }
         else
         {
@@ -289,13 +296,13 @@ public class RealFoWModStarter : Mod
         }
     }
 
-    public static void patchMethod(Type sourceType, Type targetType, string methodName)
+    private static void patchMethod(Type sourceType, Type targetType, string methodName)
     {
         patchMethod(sourceType, targetType, methodName, null);
     }
 
 
-    public static void patchMethod(Type sourceType, Type targetType, string methodName, params Type[] types)
+    private static void patchMethod(Type sourceType, Type targetType, string methodName, params Type[] types)
     {
         MethodInfo method;
         if (types != null)
@@ -312,7 +319,7 @@ public class RealFoWModStarter : Mod
 
         if (sourceType != method?.DeclaringType)
         {
-            Log.Message(
+            LogMessage(
                 $"Inconsistent method declaring type for method {methodName}: expected {sourceType} but found {method?.DeclaringType}");
         }
 
@@ -368,7 +375,7 @@ public class RealFoWModStarter : Mod
             {
                 if (patchWithHarmony(method, methodInfo, methodInfo2))
                 {
-                    Log.Message($"Patched method {method} from source {sourceType} to {targetType}.");
+                    LogMessage($"Patched method {method} from source {sourceType} to {targetType}.");
                 }
                 else
                 {
@@ -387,7 +394,7 @@ public class RealFoWModStarter : Mod
         }
     }
 
-    public static bool patchWithHarmony(MethodInfo original, MethodInfo prefix, MethodInfo postfix)
+    private static bool patchWithHarmony(MethodInfo original, MethodInfo prefix, MethodInfo postfix)
     {
         bool result;
         try

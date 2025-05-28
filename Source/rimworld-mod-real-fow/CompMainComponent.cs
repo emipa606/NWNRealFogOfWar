@@ -4,12 +4,12 @@ namespace RimWorldRealFoW;
 
 public class CompMainComponent : ThingComp
 {
-    public static readonly CompProperties COMP_DEF = new CompProperties(typeof(CompMainComponent));
+    public static readonly CompProperties CompDef = new(typeof(CompMainComponent));
     public CompComponentsPositionTracker compComponentsPositionTracker;
     public CompFieldOfViewWatcher compFieldOfViewWatcher;
     public CompHiddenable compHiddenable;
     public CompHideFromPlayer compHideFromPlayer;
-    public CompViewBlockerWatcher compViewBlockerWatcher;
+    private CompViewBlockerWatcher compViewBlockerWatcher;
     private bool setup;
 
     private void performSetup()
@@ -51,8 +51,7 @@ public class CompMainComponent : ThingComp
         }
 
         if (
-            category == ThingCategory.Pawn
-            || category == ThingCategory.Building
+            category is ThingCategory.Pawn or ThingCategory.Building
             //||category == ThingCategory.Projectile
         )
         {
@@ -66,10 +65,7 @@ public class CompMainComponent : ThingComp
 
     public override void PostSpawnSetup(bool respawningAfterLoad)
     {
-        if (!setup)
-        {
-            performSetup();
-        }
+        performSetup();
 
         compComponentsPositionTracker.PostSpawnSetup(respawningAfterLoad);
 
@@ -83,10 +79,7 @@ public class CompMainComponent : ThingComp
 
     public override void CompTick()
     {
-        if (!setup)
-        {
-            performSetup();
-        }
+        performSetup();
 
         compComponentsPositionTracker.CompTick();
         compHiddenable.CompTick();
@@ -97,10 +90,7 @@ public class CompMainComponent : ThingComp
 
     public override void CompTickRare()
     {
-        if (!setup)
-        {
-            performSetup();
-        }
+        performSetup();
 
         compComponentsPositionTracker.CompTickRare();
         compHiddenable.CompTickRare();
@@ -111,10 +101,7 @@ public class CompMainComponent : ThingComp
 
     public override void ReceiveCompSignal(string signal)
     {
-        if (!setup)
-        {
-            performSetup();
-        }
+        performSetup();
 
         compComponentsPositionTracker.ReceiveCompSignal(signal);
         compHiddenable.ReceiveCompSignal(signal);
@@ -125,10 +112,7 @@ public class CompMainComponent : ThingComp
 
     public override void PostDeSpawn(Map map)
     {
-        if (!setup)
-        {
-            performSetup();
-        }
+        performSetup();
 
         compComponentsPositionTracker.PostDeSpawn(map);
         compHiddenable.PostDeSpawn(map);
@@ -139,10 +123,7 @@ public class CompMainComponent : ThingComp
 
     public override void PostExposeData()
     {
-        if (!setup)
-        {
-            performSetup();
-        }
+        performSetup();
 
         compComponentsPositionTracker.PostExposeData();
         compHiddenable.PostExposeData();

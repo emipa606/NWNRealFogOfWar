@@ -5,66 +5,46 @@ using Verse;
 
 namespace RimWorldRealFoW;
 
-public class RFOWSettings : ModSettings
+public class RfowSettings : ModSettings
 {
-    public enum FogAlpha
-    {
-        Black = 255,
-        NearlyBlack = 210,
-        VeryVeryVeryDark = 180,
-        VeryVeryDark = 150,
-        VeryDark = 120,
-        Dark = 100,
-        Medium = 80,
-        Light = 60
-    }
+    public static string CurrentVersion;
 
-    public enum FogFadeSpeedEnum
-    {
-        Slow = 5,
-        Medium = 20,
-        Fast = 40,
-        Disabled = 100
-    }
+    private static Vector2 scrollPosition = Vector2.zero;
 
-    public static string currentVersion;
+    private static FogFadeSpeedEnum fogFadeSpeed = FogFadeSpeedEnum.Medium;
 
-    public static Vector2 scrollPosition = Vector2.zero;
+    private static FogAlpha fogAlpha = FogAlpha.Medium;
 
-    public static FogFadeSpeedEnum fogFadeSpeed = FogFadeSpeedEnum.Medium;
+    public static int BaseViewRange = 60;
+    public static float BaseHearingRange = 10;
 
-    public static FogAlpha fogAlpha = FogAlpha.Medium;
+    public static float BuildingVisionModifier = 1;
 
-    public static int baseViewRange = 60;
-    public static float baseHearingRange = 10;
+    public static float TurretVisionModifier = 0.7f;
 
-    public static float buildingVisionModifier = 1;
+    public static float AnimalVisionModifier = 0.5f;
 
-    public static float turretVisionModifier = 0.7f;
-
-    public static float animalVisionModifier = 0.5f;
-
-    public static int audioSourceRange = 30; // Max tiles you can "hear"
+    public static int AudioSourceRange = 30; // Max tiles you can "hear"
     private static string audioSourceRangeBuffer;
-    public static float volumeMufflingModifier = 0.5f; // 0 = no dropoff, 1 = full dropoff.
+    public static float VolumeMufflingModifier = 0.5f; // 0 = no dropoff, 1 = full dropoff.
 
 
-    public static bool hideSpeakBubble;
+    public static bool HideSpeakBubble;
 
-    public static bool aiSmart;
-    public static bool censorMode;
-    public static bool needWatcher = true;
-    public static bool hideThreatBig;
-    public static bool hideThreatSmall;
-    public static bool hideEventPositive;
-    public static bool hideEventNegative;
-    public static bool hideEventNeutral;
-    public static bool prisonerGiveVision;
-    public static bool allyGiveVision;
-    public static bool mapRevealAtStart;
-    public static bool wildLifeTabVisible = true;
-    public static bool needMemoryStorage = true;
-    public static bool doAudioCheck = false; // Whether the audio check should be performed for fogged sounds.
+    public static bool AISmart;
+    public static bool CensorMode;
+    public static bool NeedWatcher = true;
+    public static bool HideThreatBig;
+    public static bool HideThreatSmall;
+    public static bool HideEventPositive;
+    public static bool HideEventNegative;
+    public static bool HideEventNeutral;
+    public static bool PrisonerGiveVision;
+    public static bool AllyGiveVision;
+    public static bool MapRevealAtStart;
+    public static bool WildLifeTabVisible = true;
+    private static bool needMemoryStorage = true;
+    public static bool DoAudioCheck; // Whether the audio check should be performed for fogged sounds.
 
 
     // public static bool doFilthReveal = true; // Whether filth should be automatically revealed when its created
@@ -97,7 +77,7 @@ public class RFOWSettings : ModSettings
                 list.Add(new FloatMenuOption(("fogAlphaSetting_" + localValue3).Translate(), delegate
                 {
                     fogAlpha = localValue3;
-                    ApplySettings();
+                    applySettings();
                 }));
             }
 
@@ -118,7 +98,7 @@ public class RFOWSettings : ModSettings
                 list2.Add(new FloatMenuOption(("fogFadeSpeedSetting_" + localValue2).Translate(), delegate
                 {
                     fogFadeSpeed = localValue2;
-                    ApplySettings();
+                    applySettings();
                 }));
             }
 
@@ -128,51 +108,53 @@ public class RFOWSettings : ModSettings
         Text.Font = GameFont.Tiny;
         row.Label("fogFadeSpeedSetting_desc".Translate());
         Text.Font = GameFont.Small;
-        AddGap(row);
-        row.Label("baseViewRange".Translate() + ": " + baseViewRange.ToString(), -1f, "baseViewRange".Translate());
-        baseViewRange = (int)row.Slider(baseViewRange, 10f, 100);
-        row.Label("baseHearingRange".Translate() + ": " + Math.Round(baseHearingRange, 1).ToString());
-        baseHearingRange = row.Slider(baseHearingRange, 0, 30);
-        AddGap(row);
-        row.Label("buildingVisionMod".Translate() + ": " + Math.Round(buildingVisionModifier, 2).ToString(), -1f,
+        addGap(row);
+        row.Label("baseViewRange".Translate() + ": " + BaseViewRange.ToString(), -1f, "baseViewRange".Translate());
+        BaseViewRange = (int)row.Slider(BaseViewRange, 10f, 100);
+        row.Label("baseHearingRange".Translate() + ": " + Math.Round(BaseHearingRange, 1).ToString());
+        BaseHearingRange = row.Slider(BaseHearingRange, 0, 30);
+        addGap(row);
+        row.Label("buildingVisionMod".Translate() + ": " + Math.Round(BuildingVisionModifier, 2).ToString(), -1f,
             "buildingVisionModDesc".Translate());
-        buildingVisionModifier = row.Slider(buildingVisionModifier, 0.2f, 2);
-        row.Label("animalVisionModDesc".Translate() + ": " + Math.Round(animalVisionModifier, 2).ToString());
-        animalVisionModifier = row.Slider(animalVisionModifier, 0.2f, 2);
-        row.Label("turretVisionModDesc".Translate() + ": " + Math.Round(turretVisionModifier, 2).ToString());
-        turretVisionModifier = row.Slider(turretVisionModifier, 0.2f, 2);
-        AddGap(row);
-        row.CheckboxLabeled("allyGiveVision".Translate(), ref allyGiveVision, "allyGiveVision".Translate());
-        row.CheckboxLabeled("prisonerGiveVision".Translate(), ref prisonerGiveVision, "prisonerGiveVision".Translate());
-        row.CheckboxLabeled("mapRevealAtStart".Translate(), ref mapRevealAtStart, "mapRevealAtStart".Translate());
+        BuildingVisionModifier = row.Slider(BuildingVisionModifier, 0.2f, 2);
+        row.Label("animalVisionModDesc".Translate() + ": " + Math.Round(AnimalVisionModifier, 2).ToString());
+        AnimalVisionModifier = row.Slider(AnimalVisionModifier, 0.2f, 2);
+        row.Label("turretVisionModDesc".Translate() + ": " + Math.Round(TurretVisionModifier, 2).ToString());
+        TurretVisionModifier = row.Slider(TurretVisionModifier, 0.2f, 2);
+        addGap(row);
+        row.CheckboxLabeled("allyGiveVision".Translate(), ref AllyGiveVision, "allyGiveVision".Translate());
+        row.CheckboxLabeled("prisonerGiveVision".Translate(), ref PrisonerGiveVision, "prisonerGiveVision".Translate());
+        row.CheckboxLabeled("mapRevealAtStart".Translate(), ref MapRevealAtStart, "mapRevealAtStart".Translate());
 
-        row.CheckboxLabeled("wildLifeTabVisible".Translate(), ref wildLifeTabVisible,
+        row.CheckboxLabeled("wildLifeTabVisible".Translate(), ref WildLifeTabVisible,
             "wildLifeTabVisibleDesc".Translate());
-        row.CheckboxLabeled("NeedWatcher".Translate(), ref needWatcher, "NeedWatcherDesc".Translate());
+        row.CheckboxLabeled("NeedWatcher".Translate(), ref NeedWatcher, "NeedWatcherDesc".Translate());
 
-        AddGap(row);
-        row.CheckboxLabeled("hideEventNegative".Translate(), ref hideEventNegative, "hideEventNegative".Translate());
-        row.CheckboxLabeled("hideEventNeutral".Translate(), ref hideEventNeutral, "hideEventNeutral".Translate());
-        row.CheckboxLabeled("hideEventPositive".Translate(), ref hideEventPositive, "hideEventPositive".Translate());
-        row.CheckboxLabeled("hideThreatBig".Translate(), ref hideThreatBig, "hideThreatBig".Translate());
-        row.CheckboxLabeled("hideThreatSmall".Translate(), ref hideThreatSmall, "hideThreatSmall".Translate());
-        AddGap(row);
-        row.CheckboxLabeled("censorMode".Translate(), ref censorMode, "censorMode".Translate());
-        row.CheckboxLabeled("hideSpeakBubble".Translate(), ref hideSpeakBubble, "hideSpeakBubbleDesc".Translate());
-        row.CheckboxLabeled("aiSmart".Translate(), ref aiSmart, "aiSmartDesc".Translate());
+        addGap(row);
+        row.CheckboxLabeled("hideEventNegative".Translate(), ref HideEventNegative, "hideEventNegative".Translate());
+        row.CheckboxLabeled("hideEventNeutral".Translate(), ref HideEventNeutral, "hideEventNeutral".Translate());
+        row.CheckboxLabeled("hideEventPositive".Translate(), ref HideEventPositive, "hideEventPositive".Translate());
+        row.CheckboxLabeled("hideThreatBig".Translate(), ref HideThreatBig, "hideThreatBig".Translate());
+        row.CheckboxLabeled("hideThreatSmall".Translate(), ref HideThreatSmall, "hideThreatSmall".Translate());
+        addGap(row);
+        row.CheckboxLabeled("censorMode".Translate(), ref CensorMode, "censorMode".Translate());
+        row.CheckboxLabeled("hideSpeakBubble".Translate(), ref HideSpeakBubble, "hideSpeakBubbleDesc".Translate());
+        row.CheckboxLabeled("aiSmart".Translate(), ref AISmart, "aiSmartDesc".Translate());
 
-        AddGap(row);
-        row.CheckboxLabeled("doVolumeCheck".Translate(), ref doAudioCheck, "doVolumeCheck".Translate());
+        addGap(row);
+        row.CheckboxLabeled("doVolumeCheck".Translate(), ref DoAudioCheck, "doVolumeCheck".Translate());
 
-        if (doAudioCheck)
+        if (DoAudioCheck)
         {
-            row.Label("audioSourceRange".Translate() + ": " + audioSourceRange.ToString(), -1f, "audioSourceRangeDesc".Translate());
-            row.IntEntry(ref audioSourceRange, ref audioSourceRangeBuffer);
-            row.Label("volumeMufflingModifier".Translate() + ": " + Math.Round(volumeMufflingModifier, 1).ToString(), -1f, "volumeMufflingModifierDesc".Translate());
-            volumeMufflingModifier = row.Slider(volumeMufflingModifier, 0f, 1f);
-        }    
-        
-    
+            row.Label("audioSourceRange".Translate() + ": " + AudioSourceRange.ToString(), -1f,
+                "audioSourceRangeDesc".Translate());
+            row.IntEntry(ref AudioSourceRange, ref audioSourceRangeBuffer);
+            row.Label("volumeMufflingModifier".Translate() + ": " + Math.Round(VolumeMufflingModifier, 1).ToString(),
+                -1f, "volumeMufflingModifierDesc".Translate());
+            VolumeMufflingModifier = row.Slider(VolumeMufflingModifier, 0f, 1f);
+        }
+
+
         // row.CheckboxLabeled("doFilthReveal".Translate(), ref RFOWSettings.doFilthReveal, doFilthRevealDesc".Translate());
 
         if (row.ButtonText("RFWreset".Translate(), widthPct: 0.5f))
@@ -180,36 +162,36 @@ public class RFOWSettings : ModSettings
             // reset all settings
             fogFadeSpeed = FogFadeSpeedEnum.Medium;
             fogAlpha = FogAlpha.Medium;
-            baseViewRange = 60;
-            baseHearingRange = 10;
-            buildingVisionModifier = 1;
-            turretVisionModifier = 0.7f;
-            animalVisionModifier = 0.5f;
-            hideSpeakBubble = false;
-            aiSmart = false;
-            censorMode = false;
-            needWatcher = true;
-            hideThreatBig = false;
-            hideThreatSmall = false;
-            hideEventPositive = false;
-            hideEventNegative = false;
-            hideEventNeutral = false;
-            prisonerGiveVision = false;
-            allyGiveVision = false;
-            mapRevealAtStart = false;
-            wildLifeTabVisible = true;
+            BaseViewRange = 60;
+            BaseHearingRange = 10;
+            BuildingVisionModifier = 1;
+            TurretVisionModifier = 0.7f;
+            AnimalVisionModifier = 0.5f;
+            HideSpeakBubble = false;
+            AISmart = false;
+            CensorMode = false;
+            NeedWatcher = true;
+            HideThreatBig = false;
+            HideThreatSmall = false;
+            HideEventPositive = false;
+            HideEventNegative = false;
+            HideEventNeutral = false;
+            PrisonerGiveVision = false;
+            AllyGiveVision = false;
+            MapRevealAtStart = false;
+            WildLifeTabVisible = true;
             needMemoryStorage = true;
-            doAudioCheck = false;
-            audioSourceRange = 30;
-            volumeMufflingModifier = 0.5f;
-            ApplySettings();
+            DoAudioCheck = false;
+            AudioSourceRange = 30;
+            VolumeMufflingModifier = 0.5f;
+            applySettings();
         }
 
-        if (currentVersion != null)
+        if (CurrentVersion != null)
         {
             row.Gap();
             GUI.contentColor = Color.gray;
-            row.Label("CurrentModVersion".Translate(currentVersion));
+            row.Label("CurrentModVersion".Translate(CurrentVersion));
             GUI.contentColor = Color.white;
         }
 
@@ -217,17 +199,17 @@ public class RFOWSettings : ModSettings
         Widgets.EndScrollView();
     }
 
-    public static void AddGap(Listing_Standard listing_Standard, float value = 12f)
+    private static void addGap(Listing_Standard listingStandard, float value = 12f)
     {
-        listing_Standard.Gap(value);
-        listing_Standard.GapLine(value);
+        listingStandard.Gap(value);
+        listingStandard.GapLine(value);
     }
 
-    public static void ApplySettings()
+    private static void applySettings()
     {
-        SectionLayer_FoVLayer.prefFadeSpeedMult = (int)fogFadeSpeed;
-        SectionLayer_FoVLayer.prefEnableFade = fogFadeSpeed != FogFadeSpeedEnum.Disabled;
-        SectionLayer_FoVLayer.prefFogAlpha = (byte)fogAlpha;
+        SectionLayerFoVLayer.PrefFadeSpeedMult = (int)fogFadeSpeed;
+        SectionLayerFoVLayer.PrefEnableFade = fogFadeSpeed != FogFadeSpeedEnum.Disabled;
+        SectionLayerFoVLayer.PrefFogAlpha = (byte)fogAlpha;
         if (Current.ProgramState != ProgramState.Playing)
         {
             return;
@@ -244,30 +226,50 @@ public class RFOWSettings : ModSettings
         base.ExposeData();
         Scribe_Values.Look(ref fogFadeSpeed, "fogFadeSpeed", FogFadeSpeedEnum.Medium);
         Scribe_Values.Look(ref fogAlpha, "fogAlpha", FogAlpha.Medium);
-        Scribe_Values.Look(ref baseViewRange, "baseViewRange", 60);
-        Scribe_Values.Look(ref buildingVisionModifier, "buildingVisionMod", 1);
-        Scribe_Values.Look(ref animalVisionModifier, "animalVisionMod", 0.5f);
-        Scribe_Values.Look(ref turretVisionModifier, "turretVisionMod", 0.7f);
-        Scribe_Values.Look(ref baseHearingRange, "baseHearingRange", 10);
-        Scribe_Values.Look(ref wildLifeTabVisible, "wildLifeTabVisible", true);
-        Scribe_Values.Look(ref prisonerGiveVision, "prisonerGiveVision");
-        Scribe_Values.Look(ref mapRevealAtStart, "mapRevealAtStart");
-        Scribe_Values.Look(ref allyGiveVision, "allyGiveVision");
-        Scribe_Values.Look(ref needWatcher, "needWatcher", true);
+        Scribe_Values.Look(ref BaseViewRange, "baseViewRange", 60);
+        Scribe_Values.Look(ref BuildingVisionModifier, "buildingVisionMod", 1);
+        Scribe_Values.Look(ref AnimalVisionModifier, "animalVisionMod", 0.5f);
+        Scribe_Values.Look(ref TurretVisionModifier, "turretVisionMod", 0.7f);
+        Scribe_Values.Look(ref BaseHearingRange, "baseHearingRange", 10);
+        Scribe_Values.Look(ref WildLifeTabVisible, "wildLifeTabVisible", true);
+        Scribe_Values.Look(ref PrisonerGiveVision, "prisonerGiveVision");
+        Scribe_Values.Look(ref MapRevealAtStart, "mapRevealAtStart");
+        Scribe_Values.Look(ref AllyGiveVision, "allyGiveVision");
+        Scribe_Values.Look(ref NeedWatcher, "needWatcher", true);
         Scribe_Values.Look(ref needMemoryStorage, "needMemoryStorage", true);
-        Scribe_Values.Look(ref hideEventNegative, "hideEventNegative");
-        Scribe_Values.Look(ref hideEventNeutral, "hideEventNeutral");
-        Scribe_Values.Look(ref hideEventPositive, "hideEventPositive");
-        Scribe_Values.Look(ref hideThreatBig, "hideThreatBig");
-        Scribe_Values.Look(ref hideThreatSmall, "hideThreatSmall");
-        Scribe_Values.Look(ref censorMode, "censorMode");
-        Scribe_Values.Look(ref hideSpeakBubble, "hideSpeakBubble");
-        Scribe_Values.Look(ref aiSmart, "aiSmart");
-        Scribe_Values.Look(ref doAudioCheck, "doAudioCheck", false);
-        Scribe_Values.Look(ref audioSourceRange, "audioSourceRange", 30);
-        Scribe_Values.Look(ref volumeMufflingModifier, "volumeMufflingModifier", 0.5f);
+        Scribe_Values.Look(ref HideEventNegative, "hideEventNegative");
+        Scribe_Values.Look(ref HideEventNeutral, "hideEventNeutral");
+        Scribe_Values.Look(ref HideEventPositive, "hideEventPositive");
+        Scribe_Values.Look(ref HideThreatBig, "hideThreatBig");
+        Scribe_Values.Look(ref HideThreatSmall, "hideThreatSmall");
+        Scribe_Values.Look(ref CensorMode, "censorMode");
+        Scribe_Values.Look(ref HideSpeakBubble, "hideSpeakBubble");
+        Scribe_Values.Look(ref AISmart, "aiSmart");
+        Scribe_Values.Look(ref DoAudioCheck, "doAudioCheck");
+        Scribe_Values.Look(ref AudioSourceRange, "audioSourceRange", 30);
+        Scribe_Values.Look(ref VolumeMufflingModifier, "volumeMufflingModifier", 0.5f);
         //Scribe_Values.Look(ref doFilthReveal, "doFilthReveal", true);
 
-        ApplySettings();
+        applySettings();
+    }
+
+    private enum FogAlpha
+    {
+        Black = 255,
+        NearlyBlack = 210,
+        VeryVeryVeryDark = 180,
+        VeryVeryDark = 150,
+        VeryDark = 120,
+        Dark = 100,
+        Medium = 80,
+        Light = 60
+    }
+
+    private enum FogFadeSpeedEnum
+    {
+        Slow = 5,
+        Medium = 20,
+        Fast = 40,
+        Disabled = 100
     }
 }

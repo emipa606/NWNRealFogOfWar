@@ -2,7 +2,7 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _EnvironmentStatsDrawer
+public static class EnvironmentStatsDrawer
 {
     public static void ShouldShowWindowNow_Postfix(ref bool __result)
     {
@@ -12,7 +12,7 @@ public static class _EnvironmentStatsDrawer
         }
 
         var currentMap = Find.CurrentMap;
-        var mapComponentSeenFog = currentMap.getMapComponentSeenFog();
+        var mapComponentSeenFog = currentMap.GetMapComponentSeenFog();
         __result = mapComponentSeenFog == null ||
                    mapComponentSeenFog.knownCells[currentMap.cellIndices.CellToIndex(UI.MouseCell())];
     }

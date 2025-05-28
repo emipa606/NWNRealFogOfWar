@@ -3,23 +3,23 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _ReservationUtility
+public static class ReservationUtility
 {
-    public static void CanReserve_Postfix(this Pawn p, ref bool __result, LocalTargetInfo target)
+    public static void CanReserve_Postfix(this Verse.Pawn p, ref bool __result, LocalTargetInfo target)
     {
         if (__result && p.Faction is { IsPlayer: true } && target.HasThing &&
             target.Thing.def.category != ThingCategory.Pawn)
         {
-            __result = target.Thing.fowIsVisible();
+            __result = target.Thing.FowIsVisible();
         }
     }
 
-    public static void CanReserveAndReach_Postfix(this Pawn p, ref bool __result, LocalTargetInfo target)
+    public static void CanReserveAndReach_Postfix(this Verse.Pawn p, ref bool __result, LocalTargetInfo target)
     {
         if (__result && p.Faction is { IsPlayer: true } && target.HasThing &&
             target.Thing.def.category != ThingCategory.Pawn)
         {
-            __result = target.Thing.fowIsVisible();
+            __result = target.Thing.FowIsVisible();
         }
     }
 }

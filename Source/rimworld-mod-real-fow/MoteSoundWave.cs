@@ -16,18 +16,18 @@ public class MoteSoundWave : Mote
     {
         get
         {
-            Mathf.Clamp01(AgeSecs * 10f);
+            _ = Mathf.Clamp01(AgeSecs * 10f);
             var num = 1f;
             var num2 = Mathf.Clamp01(1f - (AgeSecs / (targetSize / velocity)));
             return num * num2 * CalculatedIntensity();
         }
     }
 
-    public void Initialize(Vector3 position, float size, float velocity)
+    public void Initialize(Vector3 position, float size, float incomingVelocity)
     {
         exactPosition = position;
         targetSize = size;
-        this.velocity = velocity;
+        velocity = incomingVelocity;
         Scale = 0f;
     }
 
@@ -44,7 +44,7 @@ public class MoteSoundWave : Mote
         //this.exactPosition += base.Map.waterInfo.GetWaterMovement(this.exactPosition) * deltaTime;
     }
 
-    public float CalculatedIntensity()
+    private float CalculatedIntensity()
     {
         return Mathf.Sqrt(targetSize) / 10f;
     }

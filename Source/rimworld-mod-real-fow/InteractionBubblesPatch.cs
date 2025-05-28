@@ -24,7 +24,7 @@ internal static class InteractionBubblesPatch
 
         if (type == null)
         {
-            Log.Message("RFoW: Interaction bubble not installed. Ignore");
+            RealFoWModStarter.LogMessage("Interaction bubble not installed. Ignore");
 
             return false;
         }

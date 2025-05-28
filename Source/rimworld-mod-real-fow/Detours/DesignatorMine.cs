@@ -4,7 +4,7 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _Designator_Mine
+public static class DesignatorMine
 {
     public static void CanDesignateCell_Postfix(IntVec3 c, ref Designator __instance, ref AcceptanceReport __result)
     {
@@ -19,7 +19,7 @@ public static class _Designator_Mine
             return;
         }
 
-        var mapComponentSeenFog = value.getMapComponentSeenFog();
+        var mapComponentSeenFog = value.GetMapComponentSeenFog();
         if (mapComponentSeenFog != null && c.InBounds(value) &&
             !mapComponentSeenFog.knownCells[value.cellIndices.CellToIndex(c)])
         {

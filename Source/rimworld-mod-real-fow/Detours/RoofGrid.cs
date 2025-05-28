@@ -3,9 +3,9 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _RoofGrid
+public static class RoofGrid
 {
-    public static void GetCellBool_Postfix(int index, ref TerrainGrid __instance, ref bool __result)
+    public static void GetCellBool_Postfix(int index, ref Verse.TerrainGrid __instance, ref bool __result)
     {
         if (!__result)
         {
@@ -13,7 +13,7 @@ public static class _RoofGrid
         }
 
         var value = Traverse.Create(__instance).Field("map").GetValue<Map>();
-        var mapComponentSeenFog = value.getMapComponentSeenFog();
+        var mapComponentSeenFog = value.GetMapComponentSeenFog();
         if (mapComponentSeenFog != null)
         {
             __result = mapComponentSeenFog.knownCells[index];

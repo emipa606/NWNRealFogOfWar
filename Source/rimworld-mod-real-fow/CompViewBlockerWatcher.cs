@@ -61,7 +61,7 @@ public class CompViewBlockerWatcher : ThingSubComp
         if (this.map != map)
         {
             this.map = map;
-            mapCompSeenFog = map.getMapComponentSeenFog();
+            mapCompSeenFog = map.GetMapComponentSeenFog();
         }
 
         updateViewBlockerCells(false);
@@ -78,7 +78,7 @@ public class CompViewBlockerWatcher : ThingSubComp
         if (map != parent.Map)
         {
             map = parent.Map;
-            mapCompSeenFog = map.getMapComponentSeenFog();
+            mapCompSeenFog = map.GetMapComponentSeenFog();
         }
 
         updateViewBlockerCells(blockLight && !b.CanBeSeenOver());

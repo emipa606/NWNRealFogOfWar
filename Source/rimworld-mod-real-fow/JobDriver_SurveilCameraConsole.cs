@@ -16,7 +16,7 @@ internal class JobDriver_SurveilCameraConsole : JobDriver
     {
         this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
         this.FailOnBurningImmobile(TargetIndex.A);
-        this.FailOn(() => !((Building_CameraConsole)job.targetA.Thing).NeedWatcher());
+        this.FailOn(() => !Building_CameraConsole.NeedWatcher());
 
         yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.InteractionCell);
 
@@ -25,8 +25,8 @@ internal class JobDriver_SurveilCameraConsole : JobDriver
         work.tickAction = delegate
         {
             var actor = work.GetActor();
-            var building_CameraConsole = job.targetA.Thing as Building_CameraConsole;
-            building_CameraConsole?.Used();
+            var buildingCameraConsole = job.targetA.Thing as Building_CameraConsole;
+            buildingCameraConsole?.Used();
             actor.GainComfortFromCellIfPossible(true);
         };
         work.defaultCompleteMode = ToilCompleteMode.Never;

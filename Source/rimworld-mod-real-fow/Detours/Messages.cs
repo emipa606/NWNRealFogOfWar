@@ -4,11 +4,12 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _Messages
+public static class Messages
 {
     public static void Message_Prefix(string text, ref LookTargets lookTargets)
     {
-        var value = Traverse.Create(typeof(Messages)).Method("AcceptsMessage", text, lookTargets).GetValue<bool>();
+        var value = Traverse.Create(typeof(Verse.Messages)).Method("AcceptsMessage", text, lookTargets)
+            .GetValue<bool>();
         if (!value)
         {
             return;

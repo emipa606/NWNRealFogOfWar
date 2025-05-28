@@ -3,7 +3,7 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _Designator_Place_Postfix
+public static class DesignatorPlace
 {
     public static void CanDesignateCell_Postfix(ref IntVec3 c, ref Designator __instance, ref AcceptanceReport __result)
     {
@@ -17,7 +17,7 @@ public static class _Designator_Place_Postfix
         var cellRect = GenAdj.OccupiedRect(c, traverse.Field("placingRot").GetValue<Rot4>(),
             traverse.Property("PlacingDef").GetValue<BuildableDef>().Size);
         var value = traverse.Property("Map").GetValue<Map>();
-        var mapComponentSeenFog = value.getMapComponentSeenFog();
+        var mapComponentSeenFog = value.GetMapComponentSeenFog();
         if (mapComponentSeenFog == null)
         {
             return;

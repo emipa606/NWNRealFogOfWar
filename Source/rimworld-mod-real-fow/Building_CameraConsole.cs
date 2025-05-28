@@ -9,15 +9,15 @@ namespace RimWorldRealFoW;
 public class Building_CameraConsole : Building
 {
     private readonly Graphic[] workingGraphics = new Graphic[13];
-    public CompBreakdownable breakdownableComp;
+    private CompBreakdownable breakdownableComp;
 
     private Graphic censorGraphic;
 
-    public int lastTick;
+    private int lastTick;
 
-    public MapComponentSeenFog mapComp;
+    private MapComponentSeenFog mapComp;
 
-    public CompPowerTrader powerComp;
+    private CompPowerTrader powerComp;
 
 
     public bool Manned => Find.TickManager.TicksGame < lastTick + 100;
@@ -37,14 +37,14 @@ public class Building_CameraConsole : Building
         return inspect.ToString();
     }
 
-    public bool NeedWatcher()
+    public static bool NeedWatcher()
     {
         //return mapComp.SurveillanceCameraCount() >= 1;
         //Turret need the console to work so just keep it like this
         return true;
     }
 
-    public void DrawOverLay()
+    private void drawOverLay()
     {
         if (!Manned)
         {
@@ -52,35 +52,29 @@ public class Building_CameraConsole : Building
         }
 
         var cameraCount = Mathf.Min(mapComp.SurveillanceCameraCount(), 12);
-        if (workingGraphics[cameraCount] == null)
-        {
-            workingGraphics[cameraCount] = GraphicDatabase.Get(
-                def.graphicData.graphicClass,
-                $"{def.graphicData.texPath}_FX{cameraCount}",
-                ShaderDatabase.MoteGlow,
-                def.graphicData.drawSize,
-                DrawColor,
-                DrawColorTwo
-            );
-        }
+        workingGraphics[cameraCount] ??= GraphicDatabase.Get(
+            def.graphicData.graphicClass,
+            $"{def.graphicData.texPath}_FX{cameraCount}",
+            ShaderDatabase.MoteGlow,
+            def.graphicData.drawSize,
+            DrawColor,
+            DrawColorTwo
+        );
 
         workingGraphics[cameraCount].Draw(DrawPos + new Vector3(0f, 1f, 0f), Rotation, this);
-        if (!RFOWSettings.censorMode)
+        if (!RfowSettings.CensorMode)
         {
             return;
         }
 
-        if (censorGraphic == null)
-        {
-            censorGraphic = GraphicDatabase.Get(
-                def.graphicData.graphicClass,
-                $"{def.graphicData.texPath}_FX_Censor",
-                ShaderDatabase.MoteGlow,
-                def.graphicData.drawSize,
-                DrawColor,
-                DrawColorTwo
-            );
-        }
+        censorGraphic ??= GraphicDatabase.Get(
+            def.graphicData.graphicClass,
+            $"{def.graphicData.texPath}_FX_Censor",
+            ShaderDatabase.MoteGlow,
+            def.graphicData.drawSize,
+            DrawColor,
+            DrawColorTwo
+        );
 
         censorGraphic.Draw(DrawPos + new Vector3(0f, 1f, 0f), Rotation, this);
     }
@@ -89,7 +83,7 @@ public class Building_CameraConsole : Building
     {
         //((ThingWithComps)this).Draw();
         base.DrawAt(drawLoc, flip);
-        DrawOverLay();
+        drawOverLay();
     }
 
     public void Used()
@@ -103,7 +97,7 @@ public class Building_CameraConsole : Building
         base.SpawnSetup(map, respawningAfterLoad);
         powerComp = GetComp<CompPowerTrader>();
         breakdownableComp = GetComp<CompBreakdownable>();
-        mapComp = map.getMapComponentSeenFog();
+        mapComp = map.GetMapComponentSeenFog();
         mapComp.RegisterCameraConsole(this);
         //12 Possible graphic so
         /*

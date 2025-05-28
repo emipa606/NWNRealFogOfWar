@@ -6,16 +6,16 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _MainTabWindow_Wildlife
+public static class MainTabWindowWildlife
 {
-    public static bool get_Pawns_Prefix(ref IEnumerable<Pawn> __result)
+    public static bool get_Pawns_Prefix(ref IEnumerable<Verse.Pawn> __result)
     {
         __result = Find.CurrentMap.mapPawns.AllPawns.Where(p => p.Spawned && (p.Faction == null
                                                                               || p.Faction == Faction.OfInsects)
                                                                           && p.AnimalOrWildMan()
                                                                           && !p.Position.Fogged(p.Map)
-                                                                          && (p.fowIsVisible() ||
-                                                                              RFOWSettings.wildLifeTabVisible));
+                                                                          && (p.FowIsVisible() ||
+                                                                              RfowSettings.WildLifeTabVisible));
         return false;
     }
 }

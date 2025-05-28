@@ -5,13 +5,13 @@ using Verse;
 
 namespace RimWorldRealFoW;
 
-public class SectionLayer_FoVLayer : SectionLayer
+public class SectionLayerFoVLayer : SectionLayer
 {
-    public static bool prefEnableFade = true;
+    public static bool PrefEnableFade = true;
 
-    public static int prefFadeSpeedMult = 20;
+    public static int PrefFadeSpeedMult = 20;
 
-    public static byte prefFogAlpha = 86;
+    public static byte PrefFogAlpha = 86;
 
     private readonly bool[] vertsNotShown = new bool[9];
 
@@ -29,18 +29,18 @@ public class SectionLayer_FoVLayer : SectionLayer
 
     private byte[] targetAlphas = [];
 
-    static SectionLayer_FoVLayer()
+    static SectionLayerFoVLayer()
     {
     }
 
-    public SectionLayer_FoVLayer(Section section) : base(section)
+    public SectionLayerFoVLayer(Section section) : base(section)
     {
         relevantChangeTypes = FoWDef.RealFogOfWar | MapMeshFlagDefOf.FogOfWar;
     }
 
     public override bool Visible => DebugViewSettings.drawFog;
 
-    public static void MakeBaseGeometry(Section section, LayerSubMesh sm, AltitudeLayer altitudeLayer)
+    private static void makeBaseGeometry(Section section, LayerSubMesh sm, AltitudeLayer altitudeLayer)
     {
         var cellRect = new CellRect(section.botLeft.x, section.botLeft.z, 17, 17);
         cellRect.ClipInsideMap(section.map);
@@ -104,10 +104,7 @@ public class SectionLayer_FoVLayer : SectionLayer
             return;
         }
 
-        if (pawnFog == null)
-        {
-            pawnFog = Map.getMapComponentSeenFog();
-        }
+        pawnFog ??= Map.GetMapComponentSeenFog();
 
         if (pawnFog is not { initialized: true })
         {
@@ -120,7 +117,7 @@ public class SectionLayer_FoVLayer : SectionLayer
         {
             noVertex = true;
             subMesh.mesh.MarkDynamic();
-            MakeBaseGeometry(section, subMesh, AltitudeLayer.FogOfWar);
+            makeBaseGeometry(section, subMesh, AltitudeLayer.FogOfWar);
             targetAlphas = new byte[subMesh.mesh.vertexCount];
             alphaChangeTick = new int[subMesh.mesh.vertexCount];
             meshColors = new Color32[subMesh.mesh.vertexCount];
@@ -132,10 +129,7 @@ public class SectionLayer_FoVLayer : SectionLayer
 
         var num = 0;
         var fogGrid = Map.fogGrid.fogGrid;
-        if (factionShownGrid == null)
-        {
-            factionShownGrid = pawnFog.GetFactionShownCells(Faction.OfPlayer);
-        }
+        factionShownGrid ??= pawnFog.GetFactionShownCells(Faction.OfPlayer);
 
         var array = factionShownGrid;
         var playerVisibilityChangeTick = pawnFog.playerVisibilityChangeTick;
@@ -315,7 +309,7 @@ public class SectionLayer_FoVLayer : SectionLayer
                     byte b;
                     if (vertsNotShown[n])
                     {
-                        b = vertsSeen[n] ? prefFogAlpha : byte.MaxValue;
+                        b = vertsSeen[n] ? PrefFogAlpha : byte.MaxValue;
 
                         changeColor = true;
                     }
@@ -324,14 +318,14 @@ public class SectionLayer_FoVLayer : SectionLayer
                         b = 0;
                     }
 
-                    if (!prefEnableFade || noVertex)
+                    if (!PrefEnableFade || noVertex)
                     {
                         if (noVertex || meshColors[num].a != b)
                         {
                             meshColors[num] = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, b);
                         }
 
-                        if (prefEnableFade)
+                        if (PrefEnableFade)
                         {
                             activeFogTransitions = true;
                             targetAlphas[num] = b;
@@ -353,7 +347,7 @@ public class SectionLayer_FoVLayer : SectionLayer
             }
         }
 
-        if (prefEnableFade && !noVertex)
+        if (PrefEnableFade && !noVertex)
         {
             return;
         }
@@ -371,7 +365,7 @@ public class SectionLayer_FoVLayer : SectionLayer
 
     public override void DrawLayer()
     {
-        if (prefEnableFade && Visible && activeFogTransitions)
+        if (PrefEnableFade && Visible && activeFogTransitions)
         {
             var ticksGame = Find.TickManager.TicksGame;
             var num = Math.Max((int)Find.TickManager.CurTimeSpeed, 1);
@@ -387,7 +381,7 @@ public class SectionLayer_FoVLayer : SectionLayer
                     disableSubmesh = true;
                     if (ticksGame != alphaChangeTick[i])
                     {
-                        b2 = (byte)Math.Max(b, b2 - (prefFadeSpeedMult / num * (ticksGame - alphaChangeTick[i])));
+                        b2 = (byte)Math.Max(b, b2 - (PrefFadeSpeedMult / num * (ticksGame - alphaChangeTick[i])));
                         array[i] = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, b2);
                         alphaChangeTick[i] = ticksGame;
                     }
@@ -400,7 +394,7 @@ public class SectionLayer_FoVLayer : SectionLayer
                         if (ticksGame != alphaChangeTick[i])
                         {
                             b2 = (byte)Math.Min(b,
-                                b2 + (prefFadeSpeedMult / num * (ticksGame - alphaChangeTick[i])));
+                                b2 + (PrefFadeSpeedMult / num * (ticksGame - alphaChangeTick[i])));
                             array[i] = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, b2);
                             alphaChangeTick[i] = ticksGame;
                         }

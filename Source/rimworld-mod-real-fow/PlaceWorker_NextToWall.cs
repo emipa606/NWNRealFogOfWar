@@ -17,8 +17,7 @@ public class PlaceWorker_NextToWall : PlaceWorker
 
         //Additional joy object's code
         if (
-            edifice == null
-            || edifice.def == null
+            edifice?.def == null
             || edifice.def != ThingDefOf.Wall
             && !edifice.def.IsSmoothed
             && (edifice.Faction == null

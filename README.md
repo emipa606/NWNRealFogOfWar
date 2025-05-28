@@ -5,6 +5,7 @@
 Update of Luca De Petrillos mod https://steamcommunity.com/sharedfiles/filedetails/?id=2560931731
 
 - Reported to be compatible with CAI 5000 - Advanced AI + Fog Of War as long as the fog of war in that mod is turned off
+ - Wall and ceiling cameras can now be placed over other items, using the same mechanic as wall-mounted lights. Thanks to ODevil who made the original patch!
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 	

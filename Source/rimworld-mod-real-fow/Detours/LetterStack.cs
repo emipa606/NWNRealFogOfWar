@@ -3,7 +3,7 @@ using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
-public static class _LetterStack
+public static class LetterStack
 {
     public static void ReceiveLetter_Prefix(ref LookTargets lookTargets)
     {

@@ -9,6 +9,8 @@ using RimWorldRealFoW.Detours;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using Verse.Sound;
+using static RimWorldRealFoW.HarmonyPatches;
 
 namespace RimWorldRealFoW;
 
@@ -155,9 +157,16 @@ public class RealFoWModStarter : Mod
         //Designation
         patchMethod(typeof(Designation), typeof(_Designation), nameof(Designation.Notify_Added));
         patchMethod(typeof(Designation), typeof(_Designation), "Notify_Removing");
+
+        /* Filth checks
+        patchMethod(typeof(Thing), typeof(Patch_Filth_Draw), nameof(Filth.DrawNowAt));
+        patchMethod(typeof(Filth), typeof(Patch_Filth_Destroy), nameof(Filth.Destroy));
+        */
+
         harmony.Patch(
             typeof(AttackTargetFinder).GetMethod(nameof(AttackTargetFinder.CanSee)),
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.CanSeePreFix))));
+
 
         Log.Message("Prefixed method AttackTargetFinder_CanSee.");
         harmony.Patch(
@@ -174,6 +183,37 @@ public class RealFoWModStarter : Mod
             ]),
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.DrawOverlayPrefix))));
 
+        
+        harmony.Patch(
+                    typeof(SustainerManager).GetMethod(
+                    nameof(SustainerManager.RegisterSustainer)
+            ),
+                    postfix: new HarmonyMethod(
+                    typeof(Patch_RegisterSustainer).GetMethod(
+                    nameof(Patch_RegisterSustainer.Postfix)))
+                );
+        harmony.Patch(
+                    typeof(Sustainer).GetMethod(
+                    nameof(Sustainer.End)
+            ),
+                    postfix: new HarmonyMethod(
+                    typeof(Patch_UnregisterSustainer).GetMethod(
+                    nameof(Patch_UnregisterSustainer.Postfix)))
+                );
+
+        /*
+        harmony.Patch(
+            typeof(Filth).GetMethod(nameof(Filth.drawn), [
+                typeof(Filth)
+            ]),
+            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.Patch_Filth_DrawAt))));
+
+        harmony.Patch(
+            typeof(Filth).GetMethod(nameof(Filth.Destroy), [
+                typeof(Filth)
+            ]),
+            new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.Patch_Filth_Destroy))));
+        */
         Log.Message("Prefixed method OverlayDrawer_DrawOverlay.");
 
         harmony.Patch(
@@ -183,6 +223,40 @@ public class RealFoWModStarter : Mod
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.ShouldDrawSilhouettePrefix))));
 
         Log.Message("Prefixed method SilhouetteUtility_ShouldDrawSilhouette.");
+
+        harmony.Patch(
+                    typeof(SoundStarter).GetMethod(
+                    nameof(SoundStarter.PlayOneShot),
+                    new[] { typeof(SoundDef), typeof(SoundInfo) }
+            ),
+                    prefix: new HarmonyMethod(
+                    typeof(Patch_PlayOneShot).GetMethod(
+                    nameof(Patch_PlayOneShot.Prefix)))
+                );
+
+        
+
+        Log.Message("Prefixed method SoundStarter_PlayOneShot.");
+
+        harmony.Patch(
+            typeof(SoundStarter).GetMethod(
+            nameof(SoundStarter.TrySpawnSustainer),
+            new[] { typeof(SoundDef), typeof(SoundInfo) }
+    ),
+            prefix: new HarmonyMethod(
+            typeof(Patch_TrySpawnSustainer).GetMethod(
+            nameof(Patch_TrySpawnSustainer.Prefix))),
+            postfix: new HarmonyMethod(
+            typeof(Patch_TrySpawnSustainer).GetMethod(
+            nameof(Patch_TrySpawnSustainer.Postfix)
+        )
+    )
+);
+        Log.Message("Prefixed method SoundStarter_TrySpawnSustainer.");
+
+
+
+        
 
         //harmony.Patch(
         //    typeof(Section).GetMethod(nameof(Section.DrawDynamicSections), [

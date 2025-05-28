@@ -51,4 +51,11 @@
   <fogFadeSpeedSetting_Medium>Medium</fogFadeSpeedSetting_Medium>
   <fogFadeSpeedSetting_Fast>Fast</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Disabled</fogFadeSpeedSetting_Disabled>
+  <doVolumeCheck>Should sounds outside of the fog be muffled</doVolumeCheck>
+  <audioSourceRange>How far into the fog can sounds be heard</audioSourceRange>
+  <audioSourceRangeDesc>Number of tiles away you can still hear a sound under fog</audioSourceRangeDesc>
+  <volumeMufflingModifier>How much should sounds be muffled</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>At max distance, 0 = no muffling 1 = completely silent</volumeMufflingModifierDesc>
+  <doFilthReveal>Hide new filth until discovered</doFilthReveal>
+  <doFilthRevealDesc>Filth spawned under fog will remain invisible until you reveal that tile.</doFilthRevealDesc>
 </LanguageData>

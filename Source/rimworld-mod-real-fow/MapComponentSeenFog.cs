@@ -39,6 +39,7 @@ public class MapComponentSeenFog : MapComponent
     public bool initialized;
 
     public bool[] knownCells;
+    //public bool[] knownFilthCells; // entry containing only cells with filth.
     private int maxFactionLoadId;
     private Section[] sections;
     private int sectionsSizeX;
@@ -83,6 +84,11 @@ public class MapComponentSeenFog : MapComponent
             compAffectVisionGrid[i] = new List<CompAffectVision>(16);
 
             playerVisibilityChangeTick[i] = 0;
+        }
+        foreach (var filth in map.listerThings.ThingsInGroup(ThingRequestGroup.Filth))
+        {
+            int idx = map.cellIndices.CellToIndex(filth.Position);
+            //knownFilthCells[idx] = true;
         }
     }
 
@@ -329,6 +335,7 @@ public class MapComponentSeenFog : MapComponent
             for (var l = 0; l < mapCellLength; l++)
             {
                 knownCells[l] = true;
+                //knownFilthCells[l] = true;
             }
         }
 
@@ -350,6 +357,7 @@ public class MapComponentSeenFog : MapComponent
 
         ref var ptr = ref idxToCellCache[idx];
         knownCells[idx] = true;
+        //knownFilthCells[idx] = true;
         var designation = mineDesignationGrid[idx];
         if (designation != null && ptr.GetFirstMineable(map) == null)
         {
@@ -392,6 +400,7 @@ public class MapComponentSeenFog : MapComponent
         if (!knownCells[idx])
         {
             knownCells[idx] = true;
+            //knownFilthCells[idx] = true;
             if (initialized)
             {
                 map.fertilityGrid.Drawer.SetDirty();

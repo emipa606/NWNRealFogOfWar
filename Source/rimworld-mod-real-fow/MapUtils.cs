@@ -20,6 +20,7 @@ public static class MapUtils
         return mapComponentSeenFog;
     }
 
+
     public static void RevealMap(Map map)
     {
         var mapComponentSeenFog = map.GetComponent<MapComponentSeenFog>();

@@ -37,7 +37,7 @@ public class CompHiddenable : ThingSubComp
         {
             selector.Deselect(parent);
         }
-
+        FoW_AudioCache.StopAll(parent); // Find's Thing in dictionary and removes the associated audio sustainer.
         updateMeshes();
     }
 

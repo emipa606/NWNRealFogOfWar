@@ -109,8 +109,7 @@ public class CompMainComponent : ThingComp
         compViewBlockerWatcher?.ReceiveCompSignal(signal);
         compFieldOfViewWatcher?.ReceiveCompSignal(signal);
     }
-
-    public override void PostDeSpawn(Map map)
+    public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
     {
         performSetup();
 

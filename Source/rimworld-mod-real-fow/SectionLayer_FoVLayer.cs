@@ -1,5 +1,6 @@
 using System;
 using RimWorld;
+using Unity.Collections;
 using UnityEngine;
 using Verse;
 
@@ -145,7 +146,8 @@ public class SectionLayerFoVLayer : SectionLayer
             {
                 var num4 = (j * x) + i;
                 var num5 = playerVisibilityChangeTick[num4];
-                if (!fogGrid[num4])
+                
+                if (!fogGrid.IsSet(num4))
                 {
                     if (array[num4] == 0)
                     {

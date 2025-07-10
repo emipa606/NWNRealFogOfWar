@@ -27,7 +27,7 @@ internal class JobDriver_SurveilCameraConsole : JobDriver
             var actor = work.GetActor();
             var buildingCameraConsole = job.targetA.Thing as Building_CameraConsole;
             buildingCameraConsole?.Used();
-            actor.GainComfortFromCellIfPossible(true);
+            actor.GainComfortFromCellIfPossible(1, true);
         };
         work.defaultCompleteMode = ToilCompleteMode.Never;
         work.FailOnCannotTouch(TargetIndex.A, PathEndMode.InteractionCell);

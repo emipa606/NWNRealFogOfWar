@@ -22,12 +22,12 @@ internal class JobDriver_SurveilCameraConsole : JobDriver
 
         var work = new Toil();
 
-        work.tickAction = delegate
+        work.tickIntervalAction = delegate(int delta)
         {
             var actor = work.GetActor();
             var buildingCameraConsole = job.targetA.Thing as Building_CameraConsole;
-            buildingCameraConsole?.Used();
-            actor.GainComfortFromCellIfPossible(true);
+            buildingCameraConsole?.Used(delta);
+            actor.GainComfortFromCellIfPossible(delta, true);
         };
         work.defaultCompleteMode = ToilCompleteMode.Never;
         work.FailOnCannotTouch(TargetIndex.A, PathEndMode.InteractionCell);

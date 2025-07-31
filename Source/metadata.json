@@ -7,6 +7,12 @@
     " tactics",
     " vision"
   ],
-  "PreviewVersion": "1.5",
-  "LastXmlCleaning": "2025-05-28T20:12:00.4639166+02:00"
+  "PreviewVersion": "1.6",
+  "LastXmlCleaning": "2025-07-31T16:44:52.9299761+02:00",
+  "Patches": true,
+  "Defs": true,
+  "Assemblies": true,
+  "LinesOfCode": 183403,
+  "LinesOfXML": 45499,
+  "CodeBaseSize": 85
 }

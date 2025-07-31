@@ -1,5 +1,8 @@
 using System;
+using System.Reflection;
+using HarmonyLib;
 using RimWorld;
+using Unity.Collections;
 using UnityEngine;
 using Verse;
 
@@ -22,6 +25,8 @@ public class SectionLayerFoVLayer : SectionLayer
     private int[] alphaChangeTick = [];
 
     private short[] factionShownGrid;
+
+    private readonly FieldInfo fogGridFieldInfo = AccessTools.Field(typeof(FogGrid), "fogGrid");
 
     private Color32[] meshColors = [];
 
@@ -128,7 +133,7 @@ public class SectionLayerFoVLayer : SectionLayer
         }
 
         var num = 0;
-        var fogGrid = Map.fogGrid.fogGrid;
+        var fogGrid = (NativeBitArray)fogGridFieldInfo.GetValue(Map.fogGrid);
         factionShownGrid ??= pawnFog.GetFactionShownCells(Faction.OfPlayer);
 
         var array = factionShownGrid;
@@ -145,7 +150,7 @@ public class SectionLayerFoVLayer : SectionLayer
             {
                 var num4 = (j * x) + i;
                 var num5 = playerVisibilityChangeTick[num4];
-                if (!fogGrid[num4])
+                if (!fogGrid.IsSet(num4))
                 {
                     if (array[num4] == 0)
                     {

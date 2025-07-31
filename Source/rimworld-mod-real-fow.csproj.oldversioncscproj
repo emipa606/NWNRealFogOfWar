@@ -1,31 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<OutputType>Library</OutputType>
-		<TargetFramework>net472</TargetFramework>
-		<PlatformTarget>x64</PlatformTarget>
-		<!-- Modify [RootNamespace], [AssemblyName], [OutputPath], [VersionPrefix] -->
-		<RootNamespace>RimWorldFoWMod</RootNamespace>
-		<AssemblyName>RimWorldFoWMod</AssemblyName>
-		<OutputPath>1.4/Assemblies</OutputPath>
-		<VersionPrefix>1.0.0.1</VersionPrefix>
-		<!-- do not generate pdb file -->
-		<DebugType>none</DebugType>
-		<DebugSymbols>false</DebugSymbols>
-		    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	</PropertyGroup>
-	<ItemGroup>
-		<Compile Include="Source/*.cs" />
-		<Reference Include="C:/Program Files (x86)/Steam/steamapps/workshop/content/294100/2009463077/Current/Assemblies/0Harmony.dll">
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="C:/Program Files (x86)/Steam/steamapps/common/RimWorld/RimWorldWin64_Data/Managed/*.dll">
-			<Private>False</Private>
-		</Reference>
-	</ItemGroup>
-	<ItemGroup>
-	  <None Include="1.4\Assemblies\RimWorldFoWMod.dll" />
-	</ItemGroup>
+  <PropertyGroup>
+    <OutputPath>../../1.5/Assemblies</OutputPath>
+    <TargetFramework>net481</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <DebugType>None</DebugType>
+    <LangVersion>latest</LangVersion>
+    <FileVersion>1.5.4</FileVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref">
+      <Version>*</Version>
+      <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony">
+      <Version>*</Version>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Mlie_Rimworld_VersionFromManifest" Version="*" />
+    <PackageReference Include="Krafs.Publicizer" Version="*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <Publicize Include="Assembly-CSharp:Verse.FogGrid.fogGrid" />
+  </ItemGroup>
 </Project>

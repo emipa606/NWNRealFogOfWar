@@ -13,6 +13,8 @@ public class Building_CameraConsole : Building
 
     private Graphic censorGraphic;
 
+    private int deltaMonitor = 100;
+
     private int lastTick;
 
     private MapComponentSeenFog mapComp;
@@ -20,7 +22,7 @@ public class Building_CameraConsole : Building
     private CompPowerTrader powerComp;
 
 
-    public bool Manned => Find.TickManager.TicksGame < lastTick + 100;
+    public bool Manned => Find.TickManager.TicksGame < lastTick + deltaMonitor;
 
     public bool WorkingNow => FlickUtility.WantsToBeOn(this) && (powerComp == null || powerComp.PowerOn) &&
                               breakdownableComp is not { BrokenDown: true };
@@ -86,9 +88,13 @@ public class Building_CameraConsole : Building
         drawOverLay();
     }
 
-    public void Used()
+    public void Used(int delta)
     {
         lastTick = Find.TickManager.TicksGame;
+        if (deltaMonitor < delta)
+        {
+            deltaMonitor = delta;
+        }
     }
 
 

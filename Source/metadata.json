@@ -8,11 +8,11 @@
     " vision"
   ],
   "PreviewVersion": "1.6",
-  "LastXmlCleaning": "2025-07-31T16:44:52.9299761+02:00",
+  "LastXmlCleaning": "2025-09-23T21:49:25.8097807+02:00",
   "Patches": true,
   "Defs": true,
   "Assemblies": true,
   "LinesOfCode": 183403,
   "LinesOfXML": 45499,
-  "CodeBaseSize": 85
+  "CodeBaseSize": 84
 }

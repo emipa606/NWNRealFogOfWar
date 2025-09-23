@@ -1,35 +1,55 @@
-# GitHub Copilot Instructions for RimWorld Modding Project
+# .github/copilot-instructions.md
 
 ## Mod Overview and Purpose
-This mod introduces a sophisticated Field of View (FoW) system to RimWorld. By integrating visibility mechanics, surveillance systems, and dynamic line-of-sight calculations, it aims to enhance the strategic depth of gameplay. Players will experience a realistic approach to vision where only observed areas remain visible, creating new challenges and opportunities for tactical planning.
+
+### Mod Name: (NWN) Real Fog of War (Continued)
+
+This mod is a continuation of the original mod by Luca De Petrillo. It adds a realistic fog of war system to RimWorld, requiring players to explore the map to reveal it. The mod enhances gameplay by introducing vision mechanics for both players and AI, creating a more immersive and strategic experience.
 
 ## Key Features and Systems
-- **Field of View Mechanics:** Implements a line-of-sight system that allows only certain areas of the map to be visible based on character and object positioning.
-- **Surveillance Systems:** Introduces buildable surveillance cameras and consoles that can be powered to extend visibility in specific areas.
-- **Dynamic Vision Calculations:** Utilizes C# to dynamically update and manage vision states based on game events and actions.
-- **Environmental Influence:** Leverages environmental statistics and terrain types to influence sight ranges and visibility extents.
-- **Harmony Patching:** Utilizes Harmony for runtime modification of existing game methods to integrate new functionalities.
+
+- **Fog of War:** The map starts unrevealed. Exploration is required to reveal it.
+- **Field of View Mechanics:** 
+  - Implemented for humans, animals, and mechanoids.
+  - Influenced by sight attributes, darkness, and weather.
+  - Bionic eyes negate darkness penalties.
+- **Combat and Vision Interaction:**
+  - Ranged attacks are limited to revealed areas, except for weapons like mortars.
+  - Field of View increases when standing and attacking.
+- **Technology and Surveillance:**
+  - Surveillance cameras and watchtowers extend the Field of View.
+  - Automatic turrets have an extended view range at lower difficulties.
+- **Adaptive Vision:** 
+  - Customizable vision ranges with adjustable settings.
+  - Sound and body size impact vision for blind people and animals, respectively.
+- **Additional Features:**
+  - Night vision integration.
+  - Factional sharing of vision data.
+  - Toggle for prisoner vision and raid letter suppression.
 
 ## Coding Patterns and Conventions
-- **Static Classes:** Utilized for utility functions and global game helpers, aiding in centralized management of specific functionalities (e.g., `BeautyUtility`, `HaulAIUtility`).
-- **ThingComps:** Leveraged for component-based modularity, allowing seamless addition of behavior to in-game entities (`CompAffectVision`, `CompHiddenable`).
-- **Namespace Organization:** Maintained throughout to logically separate utilities, components, and Harmony patches, enhancing code readability and structure.
-- **Method Visibility:** Public methods for external/inter-class usage, private methods to encapsulate internal logic.
+
+- **Static Classes and Methods:** Use static classes for utility purposes, ensuring easy access and singleton-like behavior where appropriate (e.g., `BeautyUtility`, `Designation`).
+- **Thing and Component System:** Make use of the ThingComp and ThingSubComp classes to model components affecting vision and behavior.
+- **Consistent Naming:** Follow C# naming conventions for class, method, and variable names (PascalCase for public members, camelCase for private members).
 
 ## XML Integration
-XML integration is used to define game data such as defs for items and buildings. Although specifics aren't highlighted here, ensure your XML files align with RimWorld's schema, enabling easy integration with defined classes in C#. Use XML for components like `CompProperties_AffectVision` and `CompProperties_ProvideVision`.
+
+- **Mod Configuration:** XML configuration for customizable settings, such as vision range adjustments, should be maintained in the mod's XML files. Ensure configurations are user-friendly and well-documented for easy tweaking.
 
 ## Harmony Patching
-- **Usage of Harmony:** Modify existing game behavior at runtime to inject new functionality without altering original source code.
-- **Targeted Patches:** Implement targeted method patches, such as `Patch_RegisterSustainer` and `Patch_PlayOneShot`, to overwrite or extend base game functionality.
-- **Patch Safety:** Ensure patches are efficient and safe to prevent conflicts, using prefixes and postfixes judiciously.
+
+- **Harmony Usage:** Utilize Harmony for patching game methods to integrate fog of war features seamlessly:
+  - **Audio and Visual Effects:** Patch methods to register and unregister sound, affecting auditory fog of war.
+  - **AI and Player Interactions:** Extend AI behavior to consider fog of war when targeting or interacting with the environment.
+  - **UI Elements:** Ensure UI elements account for and display fog of war status appropriately, but take care not to introduce performance issues.
 
 ## Suggestions for Copilot
-When utilizing Copilot for this RimWorld mod project, consider the following:
-- **Static Utility Methods:** Focus on generating utility functions for calculating vision or processing environmental variables.
-- **Edge Cases Handling:** Encourage Copilot to suggest proper null-checks and conditional logic, particularly for dynamic vision calculations.
-- **Modular Component Design:** Utilize Copilot to draft components that can be easily adapted or extended, particularly for `ThingComp` based classes.
-- **Harmony Patch Suggestions:** While crafting Harmony patches, guide Copilot to generate stub methods with pre/postfix patterns to ensure non-intrusive modifications.
-- **XML Definition Guidance:** Ensure Copilot leverages proper XML schema for defining mods' data, maintaining seamless integration with C# codebases.
 
-By adhering to these guidelines, Copilot can assist in streamlining development and maintaining quality within your RimWorld modding projects.
+- **Method Autocompletion:** Suggest method names and signatures based on existing patterns in the codebase for consistent implementation.
+- **Error Handling Tips:** Provide suggestions for handling exceptions or potential edge cases, especially in methods dealing with game logic.
+- **Performance Optimization:** Advise code patterns that minimize lag, especially in the visibility update logic affecting large numbers of pawns.
+- **XML Generation:** Assist in generating well-structured XML configuration elements related to mod settings and default values.
+- **Harmony Patch Templates:** Offer templates for common Harmony patch patterns, reducing manual setup time and ensuring best practices are followed.
+
+This instruction file is designed to guide developers working on the `(NWN) Real Fog of War (Continued)` mod in maintaining standardized and efficient codebase updates, leveraging both existing conventions and intelligent tools like GitHub Copilot.

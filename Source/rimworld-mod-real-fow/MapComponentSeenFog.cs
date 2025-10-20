@@ -503,7 +503,7 @@ public class MapComponentSeenFog : MapComponent
                         }
                         case 16:
                         {
-                            if (num4 < sectionsSizeY)
+                            if (num4 + 1 < sectionsSizeY)
                             {
                                 sections[((num4 + 1) * sectionsSizeX) + (num3 - 1)].dirtyFlags |=
                                     FoWDef.RealFogOfWar;
@@ -518,7 +518,7 @@ public class MapComponentSeenFog : MapComponent
             }
             case 16:
             {
-                if (num3 < sectionsSizeX)
+                if (num3 + 1 < sectionsSizeX)
                 {
                     sections[(num4 * sectionsSizeX) + num3 + 1].dirtyFlags |= FoWDef.RealFogOfWar;
                     switch (num10)
@@ -535,7 +535,7 @@ public class MapComponentSeenFog : MapComponent
                         }
                         case 16:
                         {
-                            if (num4 < sectionsSizeY)
+                            if (num4 + 1 < sectionsSizeY)
                             {
                                 sections[((num4 + 1) * sectionsSizeX) + num3 + 1].dirtyFlags |=
                                     FoWDef.RealFogOfWar;
@@ -564,7 +564,7 @@ public class MapComponentSeenFog : MapComponent
                 return;
             }
 
-            if (num4 < sectionsSizeY)
+            if (num4 + 1 < sectionsSizeY)
             {
                 sections[((num4 + 1) * sectionsSizeX) + num3].dirtyFlags |= FoWDef.RealFogOfWar;
             }

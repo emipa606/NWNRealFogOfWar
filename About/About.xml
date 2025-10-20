@@ -22,24 +22,24 @@
   <loadAfter>
     <li>brrainz.harmony</li>
   </loadAfter>
-  <description>[img]https://i.imgur.com/buuPQel.png[/img]
+  <description>[img]https://i.postimg.cc/1X4HT06h/Info.png[/img]
 Update of Luca De Petrillos mod https://steamcommunity.com/sharedfiles/filedetails/?id=2560931731
 
 - Reported to be compatible with CAI 5000 - Advanced AI + Fog Of War as long as the fog of war in that mod is turned off
  - Wall and ceiling cameras can now be placed over other items, using the same mechanic as wall-mounted lights. Thanks to ODevil who made the original patch!
 
-[img]https://i.imgur.com/pufA0kM.png[/img]
+[img]https://i.postimg.cc/8csH3dWV/Notice.png[/img]
 
 [table]
-    [tr][td][url=https://discord.gg/h5TY6DA][img]https://i.imgur.com/zdzzBrc.png[/img][/url][/td] [td][url=https://github.com/emipa606/NWNRealFogOfWar][img]https://i.imgur.com/kTkpTOE.png[/img][/url][/td]
+    [tr][td][url=https://discord.gg/h5TY6DA][img]https://i.postimg.cc/T1h9SjbF/Discord.png[/img][/url][/td] [td][url=https://github.com/emipa606/NWNRealFogOfWar][img]https://i.postimg.cc/fykKF7X4/Github.png[/img][/url][/td]
     [/tr]
     [tr]
-        [td][img]https://i.imgur.com/WjDSfUn.png[/img][/td]
-        [td][img]https://i.imgur.com/Be8E2qJ.png[/img][/td]
+        [td][img]https://i.postimg.cc/MHXD40RW/Safe-To-Add.png[/img][/td]
+        [td][img]https://i.postimg.cc/brdTM0bP/Remove-May-Work.png[/img][/td]
     [/tr]
 [/table]
 	
-[img]https://i.imgur.com/Z4GOv8H.png[/img]
+[img]https://i.postimg.cc/hvhrw8xB/Original-Description.png[/img]
 [h1] Original feature [/h1]
 [list]
   [*]The map is initially unrevealed and must be explored.
@@ -57,11 +57,11 @@ Update of Luca De Petrillos mod https://steamcommunity.com/sharedfiles/filedetai
 [/list]
 
 [h1] New stuff[/h1]
-[img]https://i.imgur.com/xsz4cBX.png[/img]
-[img]https://i.imgur.com/DOv7EBE.png[/img]
-[img]https://i.imgur.com/edLM0pX.png[/img]
-[img]https://i.imgur.com/6T54lIo.png[/img]
-[img]https://i.imgur.com/qMcT6Dq.png[/img]
+[img]https://i.postimg.cc/jSN4gbNM/xsz4cBX.png[/img]
+[img]https://i.postimg.cc/RCk3PnTk/DOv7EBE.png[/img]
+[img]https://i.postimg.cc/g2dxpFQS/edLM0pX.png[/img]
+[img]https://i.postimg.cc/0jBzxzgw/6T54lIo.png[/img]
+[img]https://i.postimg.cc/RVZYDNVK/qMcT6Dq.png[/img]
 
 [h1] New feature [/h1]
 [list]
@@ -94,7 +94,7 @@ SaberVS7 for the 1.4 update
 YAYO for the forked version new building.
 inbae for korean translation (though newer update to this mod led to some missing translation) I'll appreciate any updated translation.
 
-[img]https://i.imgur.com/PwoNOj4.png[/img]
+[img]https://i.postimg.cc/x8qR7GH9/Reporting-Issues.png[/img]
 [list]
 [*] See if the the error persists if you just have this mod and its requirements active.
 [*] If not, try adding your other mods until it happens again.
@@ -106,5 +106,5 @@ inbae for korean translation (though newer update to this mod led to some missin
 [/list] 
 
 [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3391128917][img]https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&amp;style=plastic&amp;color=9f1111&amp;labelColor=black[/img][/url] | tags:  tactics,  vision</description>
-  <modVersion IgnoreIfNoMatchingField="True">1.6.1</modVersion>
+  <modVersion IgnoreIfNoMatchingField="True">1.6.2</modVersion>
 </ModMetaData>

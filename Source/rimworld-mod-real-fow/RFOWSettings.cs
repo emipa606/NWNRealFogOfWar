@@ -32,12 +32,12 @@ public class RfowSettings : ModSettings
     public static bool HideSpeakBubble;
 
     public static bool AISmart;
-    public static bool CensorMode;
     public static bool NeedWatcher = true;
     public static bool HideThreatBig;
     public static bool HideThreatSmall;
     public static bool HideEventPositive;
     public static bool HideEventNegative;
+    public static bool OnlyOutsideColony;
     public static bool HideEventNeutral;
     public static bool PrisonerGiveVision;
     public static bool AllyGiveVision;
@@ -137,9 +137,10 @@ public class RfowSettings : ModSettings
         row.CheckboxLabeled("hideThreatBig".Translate(), ref HideThreatBig, "hideThreatBig".Translate());
         row.CheckboxLabeled("hideThreatSmall".Translate(), ref HideThreatSmall, "hideThreatSmall".Translate());
         addGap(row);
-        row.CheckboxLabeled("censorMode".Translate(), ref CensorMode, "censorMode".Translate());
         row.CheckboxLabeled("hideSpeakBubble".Translate(), ref HideSpeakBubble, "hideSpeakBubbleDesc".Translate());
         row.CheckboxLabeled("aiSmart".Translate(), ref AISmart, "aiSmartDesc".Translate());
+        row.CheckboxLabeled("onlyOutsideColony".Translate(), ref OnlyOutsideColony,
+            "onlyOutsideColonyDesc".Translate());
 
         addGap(row);
         row.CheckboxLabeled("doVolumeCheck".Translate(), ref DoAudioCheck, "doVolumeCheck".Translate());
@@ -169,7 +170,6 @@ public class RfowSettings : ModSettings
             AnimalVisionModifier = 0.5f;
             HideSpeakBubble = false;
             AISmart = false;
-            CensorMode = false;
             NeedWatcher = true;
             HideThreatBig = false;
             HideThreatSmall = false;
@@ -238,11 +238,11 @@ public class RfowSettings : ModSettings
         Scribe_Values.Look(ref NeedWatcher, "needWatcher", true);
         Scribe_Values.Look(ref needMemoryStorage, "needMemoryStorage", true);
         Scribe_Values.Look(ref HideEventNegative, "hideEventNegative");
+        Scribe_Values.Look(ref OnlyOutsideColony, "onlyOutsideColony");
         Scribe_Values.Look(ref HideEventNeutral, "hideEventNeutral");
         Scribe_Values.Look(ref HideEventPositive, "hideEventPositive");
         Scribe_Values.Look(ref HideThreatBig, "hideThreatBig");
         Scribe_Values.Look(ref HideThreatSmall, "hideThreatSmall");
-        Scribe_Values.Look(ref CensorMode, "censorMode");
         Scribe_Values.Look(ref HideSpeakBubble, "hideSpeakBubble");
         Scribe_Values.Look(ref AISmart, "aiSmart");
         Scribe_Values.Look(ref DoAudioCheck, "doAudioCheck");

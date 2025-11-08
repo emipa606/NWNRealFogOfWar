@@ -1,5 +1,11 @@
 # Changelog for NWNRealFogOfWar
 
+1.6.3 - Removed legacy mod-option
+Added option to not use FOW on colony maps
+Added rotation-support for the camera console
+Used DeepL to update translations for ChineseSimplified, French, German
+
+
 1.6.2 - Fix for out of bounds exception on load, thanks Yato0226
 
 

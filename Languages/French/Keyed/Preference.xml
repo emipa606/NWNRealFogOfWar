@@ -60,4 +60,6 @@
   <volumeMufflingModifierDesc>A la distance maximale, 0 = pas d'étouffement 1 = complètement silencieux</volumeMufflingModifierDesc>
   <doFilthReveal>Cacher les nouvelles saletés jusqu'à ce qu'elles soient découvertes</doFilthReveal>
   <doFilthRevealDesc>Les saletés engendrées par le brouillard resteront invisibles jusqu'à ce que vous révéliez cette tuile.</doFilthRevealDesc>
+  <onlyOutsideColony>N'afficher le brouillard que sur les cartes sans colonie</onlyOutsideColony>
+  <onlyOutsideColonyDesc>Le brouillard de guerre n'aura d'effet que sur les cartes qui ne sont pas des cartes de colonies.</onlyOutsideColonyDesc>
 </LanguageData>

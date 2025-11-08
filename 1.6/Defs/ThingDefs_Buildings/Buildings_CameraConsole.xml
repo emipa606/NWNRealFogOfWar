@@ -16,7 +16,7 @@
     <graphicData>
       <texPath>Things/Buildings/CameraConsole</texPath>
       <!-- <graphicClass>Graphic_Multi</graphicClass>-->
-      <graphicClass>Graphic_Single</graphicClass>
+      <graphicClass>Graphic_Multi</graphicClass>
       <shaderType>CutoutComplex</shaderType>
       <drawSize>(4.5,4.5)</drawSize>
       <damageData>
@@ -26,7 +26,7 @@
         <cornerBR>Damage/Corner</cornerBR>
       </damageData>
     </graphicData>
-    <rotatable>false</rotatable>
+    <!-- <rotatable>false</rotatable> -->
     <size>(3,2)</size>
     <costList>
       <Steel>120</Steel>

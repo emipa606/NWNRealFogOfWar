@@ -1,30 +1,40 @@
 using HarmonyLib;
 using RimWorld.Planet;
+using RimWorldRealFoW.Utils;
 using Verse;
 
 namespace RimWorldRealFoW.Detours;
 
 public static class Messages
 {
-    public static void Message_Prefix(string text, ref LookTargets lookTargets)
+    public static bool Message_Prefix(string text, ref LookTargets lookTargets)
     {
         var value = Traverse.Create(typeof(Verse.Messages)).Method("AcceptsMessage", text, lookTargets)
             .GetValue<bool>();
         if (!value)
         {
-            return;
+            return true;
         }
 
         var hasThing = lookTargets.PrimaryTarget.HasThing;
         if (!hasThing)
         {
-            return;
+            return true;
         }
 
         var thing = lookTargets.PrimaryTarget.Thing;
-        if (thing.Faction is not { IsPlayer: true })
+        if (thing.Faction is { IsPlayer: true })
         {
-            lookTargets = new GlobalTargetInfo(thing.Position, thing.Map);
+            return true;
         }
+
+        if (thing.Spawned && RfowSettings.HideThreatBig && !thing.FowIsVisible())
+        {
+            return false;
+        }
+
+        lookTargets = new GlobalTargetInfo(thing.Position, thing.Map);
+
+        return true;
     }
 }

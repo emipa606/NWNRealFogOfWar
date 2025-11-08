@@ -48,7 +48,7 @@ public class Building_CameraConsole : Building
 
     private void drawOverLay()
     {
-        if (!Manned)
+        if (!Manned || Rotation != Rot4.North)
         {
             return;
         }
@@ -64,21 +64,6 @@ public class Building_CameraConsole : Building
         );
 
         workingGraphics[cameraCount].Draw(DrawPos + new Vector3(0f, 1f, 0f), Rotation, this);
-        if (!RfowSettings.CensorMode)
-        {
-            return;
-        }
-
-        censorGraphic ??= GraphicDatabase.Get(
-            def.graphicData.graphicClass,
-            $"{def.graphicData.texPath}_FX_Censor",
-            ShaderDatabase.MoteGlow,
-            def.graphicData.drawSize,
-            DrawColor,
-            DrawColorTwo
-        );
-
-        censorGraphic.Draw(DrawPos + new Vector3(0f, 1f, 0f), Rotation, this);
     }
 
     protected override void DrawAt(Vector3 drawLoc, bool flip = false)

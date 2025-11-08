@@ -57,4 +57,6 @@
   <volumeMufflingModifierDesc>在最大距离上，0 = 无消音 1 = 完全无声</volumeMufflingModifierDesc>
   <doFilthReveal>隐藏新的污秽直到被发现</doFilthReveal>
   <doFilthRevealDesc>在雾中生成的污秽物将保持隐身状态，直到您揭开该瓦片。</doFilthRevealDesc>
+  <onlyOutsideColony>只在非殖民地地图上显示战争迷雾</onlyOutsideColony>
+  <onlyOutsideColonyDesc>战争迷雾只会对非殖民地地图产生影响</onlyOutsideColonyDesc>
 </LanguageData>

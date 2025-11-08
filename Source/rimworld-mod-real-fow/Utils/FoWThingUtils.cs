@@ -30,25 +30,28 @@ public static class FoWThingUtils
     public static bool FowIsVisible(this Thing _this, bool forRender = false)
     {
         bool result;
-        if (_this.Spawned)
+        if (!_this.Spawned)
         {
-            if (_this.def.isSaveable && !_this.def.saveCompressible)
-            {
-                var compHiddenable = _this.TryGetCompHiddenable();
-                if (compHiddenable != null)
-                {
-                    return !compHiddenable.hidden;
-                }
-            }
-
-            result = forRender || _this.Map != null && _this.fowInKnownCell();
-        }
-        else
-        {
-            result = true;
+            return true;
         }
 
-        return result;
+        if (RfowSettings.OnlyOutsideColony && _this.Map?.IsPlayerHome == true)
+        {
+            return true;
+        }
+
+        if (!_this.def.isSaveable || _this.def.saveCompressible)
+        {
+            return forRender || _this.Map != null && _this.fowInKnownCell();
+        }
+
+        var compHiddenable = _this.TryGetCompHiddenable();
+        if (compHiddenable != null)
+        {
+            return !compHiddenable.hidden;
+        }
+
+        return forRender || _this.Map != null && _this.fowInKnownCell();
     }
 
     private static bool fowInKnownCell(this Thing _this)

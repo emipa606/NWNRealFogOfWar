@@ -16,6 +16,8 @@ public class SectionLayerFoVLayer : SectionLayer
 
     public static byte PrefFogAlpha = 86;
 
+    private readonly FieldInfo fogGridFieldInfo = AccessTools.Field(typeof(FogGrid), "fogGrid");
+
     private readonly bool[] vertsNotShown = new bool[9];
 
     private readonly bool[] vertsSeen = new bool[9];
@@ -25,8 +27,6 @@ public class SectionLayerFoVLayer : SectionLayer
     private int[] alphaChangeTick = [];
 
     private short[] factionShownGrid;
-
-    private readonly FieldInfo fogGridFieldInfo = AccessTools.Field(typeof(FogGrid), "fogGrid");
 
     private Color32[] meshColors = [];
 
@@ -43,7 +43,7 @@ public class SectionLayerFoVLayer : SectionLayer
         relevantChangeTypes = FoWDef.RealFogOfWar | MapMeshFlagDefOf.FogOfWar;
     }
 
-    public override bool Visible => DebugViewSettings.drawFog;
+    public override bool Visible => DebugViewSettings.drawFog && (!Map.IsPlayerHome || !RfowSettings.OnlyOutsideColony);
 
     private static void makeBaseGeometry(Section section, LayerSubMesh sm, AltitudeLayer altitudeLayer)
     {
@@ -105,6 +105,11 @@ public class SectionLayerFoVLayer : SectionLayer
     public override void Regenerate()
     {
         if (Current.ProgramState != ProgramState.Playing)
+        {
+            return;
+        }
+
+        if (Map.IsPlayerHome && RfowSettings.OnlyOutsideColony)
         {
             return;
         }
@@ -370,7 +375,7 @@ public class SectionLayerFoVLayer : SectionLayer
 
     public override void DrawLayer()
     {
-        if (PrefEnableFade && Visible && activeFogTransitions)
+        if (PrefEnableFade && Visible && activeFogTransitions && (!RfowSettings.OnlyOutsideColony || !Map.IsPlayerHome))
         {
             var ticksGame = Find.TickManager.TicksGame;
             var num = Math.Max((int)Find.TickManager.CurTimeSpeed, 1);

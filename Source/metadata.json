@@ -8,12 +8,12 @@
     " vision"
   ],
   "PreviewVersion": "1.6",
-  "LastXmlCleaning": "2025-10-20T20:11:44.3769337+02:00",
+  "LastXmlCleaning": "2025-11-08T23:05:03.3317505+01:00",
   "Patches": true,
   "Defs": true,
   "Assemblies": true,
-  "LinesOfCode": 183419,
-  "LinesOfXML": 45499,
+  "LinesOfCode": 183557,
+  "LinesOfXML": 45507,
   "CodeBaseSize": 84,
   "RimWorldBaseId": 22752
 }

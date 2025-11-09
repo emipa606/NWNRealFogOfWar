@@ -1,5 +1,8 @@
 # Changelog for NWNRealFogOfWar
 
+1.6.4 - All things should now be visible on colony maps when the disable fow on colony maps is selected
+
+
 1.6.3 - Removed legacy mod-option
 Added option to not use FOW on colony maps
 Added rotation-support for the camera console

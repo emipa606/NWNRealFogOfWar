@@ -201,6 +201,11 @@ public class MapComponentSeenFog : MapComponent
 
     public bool IsShown(Faction faction, int x, int z)
     {
+        if (map.IsPlayerHome && RfowSettings.OnlyOutsideColony)
+        {
+            return true;
+        }
+
         return GetFactionShownCells(faction)[(z * mapSizeX) + x] != 0;
     }
 

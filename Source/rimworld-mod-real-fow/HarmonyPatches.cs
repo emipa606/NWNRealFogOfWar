@@ -125,13 +125,13 @@ internal static class HarmonyPatches
         // If DelayAlertsUntilSeen is enabled, defer the letter only if thing is NOT visible
         if (!RfowSettings.DelayAlertsUntilSeen || !let.lookTargets.PrimaryTarget.HasThing)
         {
-            return false;
+            return true;
         }
 
         var thing = let.lookTargets.PrimaryTarget.Thing;
         if (thing?.Map == null)
         {
-            return let.def != LetterDefOf.ThreatSmall || !RfowSettings.HideThreatSmall;
+            return true;
         }
 
         // Only defer if thing is not visible

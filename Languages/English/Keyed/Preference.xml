@@ -51,7 +51,7 @@
   <fogFadeSpeedSetting_Medium>Medium</fogFadeSpeedSetting_Medium>
   <fogFadeSpeedSetting_Fast>Fast</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Disabled</fogFadeSpeedSetting_Disabled>
-  <doVolumeCheck>Should sounds outside of the fog be muffled</doVolumeCheck>
+  <doVolumeCheck>Should sounds outside the fog be muffled</doVolumeCheck>
   <audioSourceRange>How far into the fog can sounds be heard</audioSourceRange>
   <audioSourceRangeDesc>Number of tiles away you can still hear a sound under fog</audioSourceRangeDesc>
   <volumeMufflingModifier>How much should sounds be muffled</volumeMufflingModifier>
@@ -61,7 +61,7 @@
   <onlyOutsideColony>Only show fog on non-colony maps</onlyOutsideColony>
   <onlyOutsideColonyDesc>Fog of war will only have an effect on maps that are not colony maps</onlyOutsideColonyDesc>
   <delayAlertsUntilSeen>Delay alerts until enemy/event is spotted</delayAlertsUntilSeen>
-  <delayAlertsUntilSeenDesc>When enabled, threat and event alerts (raids, visitors, etc.) will be delayed until you actually see the entity causing the alert. This simulates that your pawns can't know about threats they haven't discovered yet. Alerts will trigger immediately when the entity becomes visible.</delayAlertsUntilSeenDesc>
+  <delayAlertsUntilSeenDesc>When enabled, events will be delayed until you actually see the entity causing the alert. This simulates that your pawns can't know about threats they haven't discovered yet. Alerts will trigger immediately when the entity becomes visible.</delayAlertsUntilSeenDesc>
   <clearFogDuringTargeting>Clear fog during gravship takeoff, targeting and landing</clearFogDuringTargeting>
   <clearFogDuringTargetingDesc>When enabled, the fog of war is temporarily hidden while you are taking off, selecting landing spot and landing a gravship.</clearFogDuringTargetingDesc>
   <treesBlockSight>Trees block line of sight</treesBlockSight>

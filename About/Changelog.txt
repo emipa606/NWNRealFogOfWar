@@ -1,5 +1,8 @@
 # Changelog for NWNRealFogOfWar
 
+1.6.15 - Some typo in the logic
+
+
 1.6.14 - Hide notification until seen should now always work
 
 

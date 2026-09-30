@@ -407,10 +407,9 @@ public class RealFoWModStarter : Mod
                 {
                     methodInfo = targetType.GetMethod($"{methodName}_Prefix",
                         BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
-                        null, new[]
-                        {
-                            sourceType
-                        }.Concat(types).ToArray(), null);
+                        null, [
+                            sourceType, .. types
+                        ], null);
                 }
             }
 
@@ -430,10 +429,9 @@ public class RealFoWModStarter : Mod
                 {
                     methodInfo2 = targetType.GetMethod($"{methodName}_Postfix",
                         BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic,
-                        null, new[]
-                        {
-                            sourceType
-                        }.Concat(types).ToArray(), null);
+                        null, [
+                            sourceType, .. types
+                        ], null);
                 }
             }
 

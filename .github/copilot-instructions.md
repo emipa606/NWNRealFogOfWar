@@ -1,77 +1,67 @@
-# GitHub Copilot Instructions for "(NWN) Real Fog of War (Continued)"
+# GitHub Copilot Instructions for (NWN) Real Fog of War (Continued)
 
 ## Mod Overview and Purpose
-
-"(NWN) Real Fog of War (Continued)" is an updated version of the original mod by Luca De Petrillo. It introduces a dynamic fog of war system to RimWorld, requiring players to explore the map actively. The mod adds strategic depth by incorporating line of sight and field of view mechanics, affecting both players and AI units. Enhancements in gameplay are provided by new objects, tweaks in vision settings, and various bug fixes.
+The (NWN) Real Fog of War mod is an enhancement of the original mod by Luca De Petrillo. It introduces a dynamic fog of war system to RimWorld, requiring players to explore and reveal the map. This mod enriches the tactical gameplay by introducing field of view mechanics, which both player and AI entities must navigate. It supports gameplay with existing saves while offering integration with various other mods, making it versatile and enriching for a range of RimWorld experiences.
 
 ## Key Features and Systems
+1. **Field of View System:** 
+   - The map begins unrevealed and must be explored.
+   - Entities like humans, animals, and mechanoids have adjustable fields of view affected by their sight attributes, darkness, and weather conditions.
+   - Surveillance cameras and watchtowers extend view range; research is required for these capabilities.
 
-1. **Fog of War Mechanics**: 
-   - The entire map is initially hidden and must be explored.
-   - Units reveal areas based on their field of view, which is influenced by attributes such as sight, weather, and lighting conditions.
+2. **Integration with Other Mods:**
+   - Compatible with CAI 5000 - Advanced AI + Fog Of War (when its fog is turned off).
+   - Supports Dubs Mint Minimap for enhanced map interaction.
+   - Includes various support options like trees affecting vision, and player customization for threat notification settings.
 
-2. **Field of View Dynamics**:
-   - Sight ranges are adjusted for different activities like standing, moving, and attacking.
-   - Animals participate in fog mechanics if specifically trained.
-
-3. **Additional Objects**:
-   - **Surveillance Cameras and Watchtowers**: Enhance visibility and provide strategic advantages in revealed areas.
-   - **Bionic Eyes and Night Vision**: Improve vision under low-light conditions.
-
-4. **Custom Settings**:
-   - Adjustable vision range settings.
-   - Options for integrating with other mods like night vision equipment from Vanilla Expanded.
-
-5. **Mod Compatibility**:
-   - Compatible with mods like "CAI 5000 - Advanced AI" and others, provided specific settings are adjusted.
+3. **Additional Features:**
+   - Adjustable vision settings.
+   - Night vision compatibility from mods like Vanilla Expanded Apparel.
+   - Sound-based vision for blind characters and eavesdropping mechanics.
+   - Options to suppress raid letters and other visual interactions for performance consideration.
 
 ## Coding Patterns and Conventions
+- **C# Coding Practices:**
+  - Keep classes focused on single responsibilities (e.g., `CompAffectVision` and `CompProperties_AffectVision` for vision-related functionality).
+  - Utilize descriptive method and variable names, maintaining consistent coding style (e.g., camelCase for private members, PascalCase for public).
+  - Implement interfaces and base classes to share common logic among related components.
 
-1. **C# Practices**:
-   - Class naming follows a `PascalCase` convention.
-   - Methods such as `PostSpawnSetup`, `CompTick`, `DeSpawn` are used for lifecycle management of components and building objects.
-
-2. **XML Usage**:
-   - XML files define new game objects, map flags, and research projects.
-   - Follow structured and descriptive XML definition patterns, with well-named tags as seen in various `ThingDef` and `ResearchProjectDef`.
+- **Structuring Project Files:**
+  - Organize source files by their function within the mod, such as maintaining separate files for components, utility functions, and harmony patches.
+  - Use directives to manage dependencies and manage large projects effectively.
 
 ## XML Integration
+- **XML Defs:**
+  - Define entities and game objects using XML files. For instance, `MapMeshFlag.xml` and `Buildings_VisionExtend.xml` provide definitional data for the field of view elements.
+  - Utilize consistent naming for XML defs to match their in-game counterparts for coherence and ease of lookup.
 
-- XML defines crucial gameplay elements and mod defaults using tags like `<Defs>`, `<ResearchProjectDef>`, and `<ThingDef>`.
-- Ensure XML paths are properly structured within the `Mods\NWNRealFogOfWar\1.6\Defs` directory for seamless integration.
+- **XML Modifications:**
+  - Carefully amend XML files to avoid conflicts; note existing def names and IDs before making changes to ensure compatibility.
 
 ## Harmony Patching
+- **Patch Strategy:**
+  - Use Harmony Lib for method interception where game behaviors must be changed without directly modifying game code.
+  - Apply patches to methods responsible for rendering and AI decision-making — notably, those affected by fog of war and visibility mechanics.
 
-- Utilize the `brrainz.harmony` library for patching existing game methods.
-- Maintain a clean separation of original game logic and Harmony prefixes or postfixes to avoid conflicts with other mods.
+- **Sample Usage:**
+  - Employ Harmony patches to extend or alter methods such as `CalculateVisibility` and `AttackTarget`.
+  - Test patches thoroughly in isolation before integration to minimize conflicts and errors.
 
 ## Suggestions for Copilot
+1. **Method Assistance:** Optimize visibility calculations by proposing efficient algorithms when coding `CompAffectVision` or similar components.
+2. **XML Configuration:** Suggest XML schema validation and correction when editing defs to prevent misconfigurations.
+3. **Harmony Implementation:** Recommend patch locations based on method access lists, believing that frequent users, like combat calculations, may need refinement.
+4. **Performance Tips:** Advise on performance optimizations, especially in scenarios where entity field calculations might introduce lag.
 
-1. **Code Generation**:
-   - Assist in creating structured class templates for new components or building types.
-   - Generate helper methods for managing field of view calculations or vision settings.
+## Contribution and Development
+- **Report Issues:** Use Discord channel for error reporting. Logs can be submitted via Log Uploader.
+- **Development Notes:** Ensure individual mod changes are checked standalone before integration. Use RimSort to prioritize mod load order.
+- **Licensing:** Project under Apache License 2.0; contributions must comply with this license and credit original authors and contributors.
 
-2. **XML Definitions**:
-   - Scaffold new XML files using existing patterns as a template.
-   - Suggest additions to XML for newly proposed gameplay features.
+These guidelines and suggestions will assist developers in extending or modifying the (NWN) Real Fog of War mod efficiently with Copilot and related code tools.
 
-3. **Harmony Patches**:
-   - Recommend patch structure in terms of Prefix and Postfix methods.
-   - Aid in debugging potential conflicts between Harmony patches.
 
-## Recommendations and Known Issues
-
-- Integrate mods that provide new building types or enhance tactical gameplay.
-- Be cautious of potential lag introduced by mods interacting with aiming or fog management systems.
-- Use RimSort to optimize load order for best performance.
-- Report bugs using the designated Discord channel and avoid opening discussion threads on GitHub for technical support.
-
-### Credit and License
-
-- Original mod by Luca De Petrillo under Apache License 2.0.
-- Contributions by SaberVS7, YAYO, and inbae are acknowledged.
-
-End of document.
+The detailed instructions above provide a comprehensive guide for developers leveraging GitHub Copilot to work on RimWorld mod projects, specifically focusing on maintaining structure, functionality, and integration with the game's and other mods' systems.
 
 ## Project Solution Guidelines
 - Relevant mod XML files are included as Solution Items under the solution folder named XML, these can be read and modified from within the solution.
@@ -85,4 +75,6 @@ End of document.
 ## Hard rules (must follow)
 - Do NOT run commands that modify the repo (no git commit, git apply, dotnet format) unless explicitly asked.
 - Prefer minimal reads: read only the smallest code region needed (around the suspicious lines).
+- When mentioning SonarQube issues, automatically use the SonarQube MCP service to fetch and address issues instead of making inferred fixes without querying SonarQube first.
+- When mentioning the rimworld log, automatically use the Rimworld MCP service to fetch the log.
 

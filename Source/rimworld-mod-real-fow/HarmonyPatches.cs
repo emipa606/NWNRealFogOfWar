@@ -112,9 +112,14 @@ internal static class HarmonyPatches
             return false;
         }
 
-        if (let.def != LetterDefOf.ThreatBig || !RfowSettings.HideThreatBig)
+        if (let.def == LetterDefOf.ThreatBig && RfowSettings.HideThreatBig)
         {
-            return let.def != LetterDefOf.ThreatSmall || !RfowSettings.HideThreatSmall;
+            return false;
+        }
+
+        if (let.def == LetterDefOf.ThreatSmall && RfowSettings.HideThreatSmall)
+        {
+            return false;
         }
 
         // If DelayAlertsUntilSeen is enabled, defer the letter only if thing is NOT visible

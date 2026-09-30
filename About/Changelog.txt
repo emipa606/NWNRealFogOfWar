@@ -1,5 +1,8 @@
 # Changelog for NWNRealFogOfWar
 
+1.6.14 - Hide notification until seen should now always work
+
+
 1.6.13 - Fixed issue with peaking around corners/trees. Thanks Santuzius
 
 

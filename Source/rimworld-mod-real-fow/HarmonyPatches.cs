@@ -97,6 +97,11 @@ internal static class HarmonyPatches
     [HarmonyPrefix]
     public static bool ReceiveLetterPrefix(ref Letter let)
     {
+        if (let?.lookTargets == null)
+        {
+            return true;
+        }
+
         if (let.def == LetterDefOf.NegativeEvent && RfowSettings.HideEventNegative)
         {
             return false;

@@ -1,5 +1,8 @@
 # Changelog for NWNRealFogOfWar
 
+1.6.16 - Fixed missing nullcheck
+
+
 1.6.15 - Some typo in the logic
 
 

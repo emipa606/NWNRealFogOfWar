@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HugsLib.UpdateFeatureDef Abstract="true" Name="NWNRealFogOfWar_UpdateFeatureBase">
+    <modNameReadable>NWNRealFogOfWar</modNameReadable>
+    <linkUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=3391128917</linkUrl>
+  </HugsLib.UpdateFeatureDef>
+  <HugsLib.UpdateFeatureDef ParentName="NWNRealFogOfWar_UpdateFeatureBase">
+    <defName>NWNRealFogOfWar_1_6_16</defName>
+    <assemblyVersion>1.6.16</assemblyVersion>
+    <content>This mod will not get further updates.
+Please use either the spiritual successor: Total Fog by Brainz 
+or the more advanced: Surveillance Shift by ferny</content>
+  </HugsLib.UpdateFeatureDef>
+</Defs>

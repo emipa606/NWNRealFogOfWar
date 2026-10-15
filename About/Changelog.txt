@@ -1,5 +1,8 @@
 # Changelog for NWNRealFogOfWar
 
+1.6.17 - Last update
+
+
 1.6.16 - Fixed missing nullcheck
 
 
